@@ -1,0 +1,12 @@
+local.json
+
+*.log
+*.cache
+*.pyc
+*.pyd
+*.pyo
+*.egg-info/
+*.gz
+dist/
+build/
+.venv/
