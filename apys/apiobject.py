@@ -1,4 +1,4 @@
-from apy import config, log
+from apys import config, log
 
 class _ApiObject(object):
     """

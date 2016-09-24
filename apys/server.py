@@ -1,6 +1,6 @@
 from aiohttp import web
 
-from apy import apiobject, log, routes, config
+from apys import apiobject, log, routes, config
 
 def start():
     """

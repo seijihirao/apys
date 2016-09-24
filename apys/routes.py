@@ -5,7 +5,7 @@ import json
 
 from aiohttp import web
 
-from apy import log
+from apys import log
 
 def prepare(app, api):
     """

@@ -2,7 +2,7 @@ import argparse
 
 def main():
 
-    parser = argparse.ArgumentParser(description='APY - a restful api framework.')
+    parser = argparse.ArgumentParser(description='apys - a restful api framework.')
     parser.add_argument('-s', '--start', '--serve', 
                         action='store_true', default=False, 
                         help='starts server')
@@ -22,10 +22,10 @@ def main():
     args = parser.parse_args()
 
     if args.start:
-        from apy import server
+        from apys import server
         server.start()
     elif args.init:
-        from apy import project
+        from apys import project
         project.init()
     else:
         parser.print_help()

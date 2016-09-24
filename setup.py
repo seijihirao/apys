@@ -7,6 +7,7 @@ https://github.com/pypa/sampleproject
 # Always prefer setuptools over distutils
 from setuptools import setup, find_packages
 
+# Getting description from readme
 try:
    import pypandoc
    description = pypandoc.convert('README.md', 'rst')
@@ -14,18 +15,18 @@ except (IOError, ImportError):
    description = ''
 
 setup(
-    name='apy',
+    name='apys',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.1.0',
+    version='0.1.6',
 
     description='A simple back-end rest framework in python using aiohttp lib',
     long_description=description,
 
     # The project's main homepage.
-    url='https://github.com/seijihirao/apy',
+    url='https://github.com/seijihirao/apys',
 
     # Author details
     author='Rodrigo Seiji Piubeli Hirao',
@@ -61,7 +62,7 @@ setup(
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
-    packages=find_packages(exclude=['endpoints', 'config', 'utils']),
+    packages=find_packages(exclude=['demo']),
 
     # Alternatively, if you want to distribute just a my_module.py, uncomment
     # this:
@@ -78,11 +79,14 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     entry_points={
         'console_scripts': [
-            'apy=apy.commandline:main'
+            'apys=apys.commandline:main'
         ],
     },
 )
 
+# Requirements to Build project
+# # pandoc - $ sudo pacman -S pandoc 
+# # pyandoc - $ pip install pyandoc
 #
 # Build project
 # # python setup.py sdist
@@ -91,5 +95,5 @@ setup(
 # # python setup.py bdist_wheel
 #
 # Upload to Pypi
-# # twine upload dist/apy-x.y.z-py-none-any.whl
+# # twine upload dist/apys-x.y.z-py-none-any.whl
 # # # x.y.z - is the actual version

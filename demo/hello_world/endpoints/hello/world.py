@@ -1,5 +1,5 @@
 """
-Start the server with `apy -s`
+Start the server with `apys -s`
 """
 
 utils = [

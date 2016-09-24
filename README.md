@@ -1,5 +1,5 @@
-# APY - v0.1
-Wellcome to APY! A simple backend restful framework! 
+# apys - v0.1
+Wellcome to apys! A simple backend restful framework! 
 
 ## LANGUAGE
 [Python >= 3.4.2](https://docs.python.org/3/)
@@ -21,7 +21,7 @@ Wellcome to APY! A simple backend restful framework!
     * Fedora - `sudo yum install pip`
     * Arch - `sudo pacman -S pip`
 3. Install this framework using PIP
-    * `pip install apy`
+    * `pip install apys`
     
 ---
 
@@ -29,7 +29,7 @@ Wellcome to APY! A simple backend restful framework!
 ## INITIALIZATING PROJECT
 
 ```
-$ apy --init
+$ apys --init
 ```
 
 ---
@@ -142,9 +142,9 @@ Look at the `demos/` for examples
 
 There are 2 ways to start the server
 
-1. Execute `apy -s` from terminal on your root project folder (Recomended)
+1. Execute `apys -s` from terminal on your root project folder (Recomended)
 
-2. Call the method `start()` from module `apy.server` (Only recomended if you need to do something before starting the server)
+2. Call the method `start()` from module `apys.server` (Only recomended if you need to do something before starting the server)
 
 ---
 

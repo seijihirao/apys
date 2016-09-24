@@ -52,13 +52,13 @@ My project description
 [Python](https://docs.python.org/3/)
 
 ## LIBRARIES
-* [apy](https://github.com/seijihirao/apy) - Backend restful framework
+* [apys](https://github.com/seijihirao/apys) - Backend restful framework
 
 ---
 
 ## RUNNING
 
 ```
-$ apy -s
+$ apys -s
 ```
 """
