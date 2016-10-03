@@ -4,16 +4,19 @@ import imp
 import json
 
 from aiohttp import web
+import aiohttp_cors
 
 from apys import log
 
-def prepare(app, api):
+def prepare(app, api, cors_url='*'):
     """
     Mount routers and add them to aiohttp application 
     
     Returns:
         application (cyclone.web.Application): cyclone application with endpoint routers mounted 
     """
+
+    cors = aiohttp_cors.setup(app)
 
     file_paths = []
     
@@ -84,13 +87,17 @@ def prepare(app, api):
 
             return func
 
+        # Adds route resource
+        resource = cors.add(app.router.add_resource('/' + file_path['url']))
         loaded_methods = []
         for method in supported_methods:
             if hasattr(file_module, method):
 
                 loaded_methods += [method] # Log purpose
                 # Adds route
-                app.router.add_route(method.upper(), '/' + file_path['url'], createFunc(method))
+                cors.add(resource.add_route(method.upper(), createFunc(method)), {
+                    cors_url: aiohttp_cors.ResourceOptions()
+                })
         
         # Logging loaded endpoints
         str_loaded_methods = '('

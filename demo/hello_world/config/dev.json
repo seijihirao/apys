@@ -1,6 +1,7 @@
 {
     "server": {
-        "port": 8888
+        "port": 8888,
+        "cors": "*"
     },
     "test": "Success on dev"
 }

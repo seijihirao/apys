@@ -12,6 +12,6 @@ def start():
     app = web.Application()
     global_api = apiobject.mount()
 
-    routes.prepare(app, global_api)
+    routes.prepare(app, global_api, cors_url=config.value['server']['cors'])
 
     web.run_app(app, port=config.value['server']['port'])
