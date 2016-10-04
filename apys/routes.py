@@ -8,7 +8,7 @@ import aiohttp_cors
 
 from apys import log
 
-def prepare(app, api, cors_url='*'):
+def prepare(app, api, cors_url=False):
     """
     Mount routers and add them to aiohttp application 
     
@@ -95,9 +95,12 @@ def prepare(app, api, cors_url='*'):
 
                 loaded_methods += [method] # Log purpose
                 # Adds route
-                cors.add(resource.add_route(method.upper(), createFunc(method)), {
-                    cors_url: aiohttp_cors.ResourceOptions()
-                })
+                if cors_url:
+                    cors.add(resource.add_route(method.upper(), createFunc(method)), {
+                        cors_url: aiohttp_cors.ResourceOptions()
+                    })
+                else:
+                    resource.add_route(method.upper(), createFunc(method))
         
         # Logging loaded endpoints
         str_loaded_methods = '('

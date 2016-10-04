@@ -1,4 +1,4 @@
-# apys - v0.1
+# apys - v0.2
 Wellcome to apys! A simple backend restful framework! 
 
 ## LANGUAGE
