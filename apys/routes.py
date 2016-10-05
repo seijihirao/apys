@@ -70,9 +70,9 @@ def prepare(app, api, cors_url=False):
             async def func(req):
 
                 if req.has_body:
-                    req.param = await req.json()
+                    req.params = await req.json()
                 else:
-                    req.param = {}
+                    req.params = {}
                 
                 if hasattr(endpoint, 'utils'):
                     for util in endpoint.utils:

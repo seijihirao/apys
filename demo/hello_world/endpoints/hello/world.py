@@ -33,7 +33,7 @@ def post(req, api):
         result: string
     """
     
-    message = req.param['message']
+    message = req.params['message']
 
     return {
         'request': message,

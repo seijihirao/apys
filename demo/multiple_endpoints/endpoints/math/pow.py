@@ -11,4 +11,4 @@ def post(req, api):
     Return:
         result of the power
     """
-    return req.param['x'] ** req.param['power']
+    return req.params['x'] ** req.params['power']

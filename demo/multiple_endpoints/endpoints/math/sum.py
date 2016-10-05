@@ -11,4 +11,4 @@ def post(req, api):
     Return:
         sum of both
     """
-    return req.param['x'] + req.param['y']
+    return req.params['x'] + req.params['y']

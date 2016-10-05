@@ -1,3 +1,6 @@
+## v0.2.3
+Changed `req.param` to `req.params`
+
 ## v0.2.2
 Now it is possible to have multiple endpoints (it was impossible before? Yes...)
 Also possible to have no utils

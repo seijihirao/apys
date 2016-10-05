@@ -104,7 +104,7 @@ Where `[method]` is the http request type:
 
 `req` is *aiohttp*'s request, [documentation](http://aiohttp.readthedocs.io/en/stable/web_reference.html#request)
 
-> `req` has the `param` property to read the request body 
+> `req` has the `params` property to read the request body 
 
 `api` is the object that contains all api functionalities:
 * config - Configuration dictionary used in the actual scope
