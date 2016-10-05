@@ -66,24 +66,25 @@ def prepare(app, api, cors_url=False):
         ##
         # ADDING METHOD FUNCTIONS
         #
-        def createFunc(method):
+        def createFunc(endpoint, method):
             async def func(req):
 
                 if req.has_body:
                     req.param = await req.json()
                 else:
                     req.param = {}
-
-                for util in file_module.utils:
-                    # Calls 'any' util function
-                    if hasattr(utils[util], 'any'):
-                        utils[util].any(req, handler_props['api'])
-                    # Calls current method util function
-                    if hasattr(utils[util], method):
-                        getattr(utils[util], method)(req, handler_props['api'])
                 
+                if hasattr(endpoint, 'utils'):
+                    for util in endpoint.utils:
+                        # Calls 'any' util function
+                        if hasattr(utils[util], 'any'):
+                            utils[util].any(req, handler_props['api'])
+                        # Calls current method util function
+                        if hasattr(utils[util], method):
+                            getattr(utils[util], method)(req, handler_props['api'])
+
                 # Calls current method function
-                return web.json_response(getattr(file_module, method)(req, handler_props['api']))
+                return web.json_response(getattr(endpoint, method)(req, handler_props['api']))
 
             return func
 
@@ -96,11 +97,11 @@ def prepare(app, api, cors_url=False):
                 loaded_methods += [method] # Log purpose
                 # Adds route
                 if cors_url:
-                    cors.add(resource.add_route(method.upper(), createFunc(method)), {
+                    cors.add(resource.add_route(method.upper(), createFunc(file_module, method)), {
                         cors_url: aiohttp_cors.ResourceOptions()
                     })
                 else:
-                    resource.add_route(method.upper(), createFunc(method))
+                    resource.add_route(method.upper(), createFunc(file_module, method))
         
         # Logging loaded endpoints
         str_loaded_methods = '('
