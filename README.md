@@ -61,18 +61,18 @@ The current config special properties are the following:
 ```json
 {
     "log": {
-        "file": { //optional. can be a string if it's used only a log file.
-            "debug": "string or false", //default=false. debug log file, false for sys.stdout
-            "error": "string or false", //default=false. debug error file, false for sys.stderr
-            //(...): "string or false" //optional. you can specify any other log file, but you will have to tell the `api.debug` function to use it
+        "file": {
+            "debug": "string or false //default=false. debug log file, false for sys.stdout", 
+            "error": "string or false //default=false. debug error file, false for sys.stderr",
+            "(...)": "string or false //optional. you can specify any other log file, but you will have to tell the `api.debug` function to use it"
         },
-        "color": "bool" //default=true
+        "color": "bool //default=true"
     },
     "server": {
-        "port": "int", //default=8888
-        "cors": "string or false" //default=false
+        "port": "int //default=8888",
+        "cors": "string or false //default=false"
     },
-    //(...): (...) //you can add any other key and access it via `api.config['my_key']`
+    "(...)": "(...) //you can add any other key and access it via `api.config['my_key']`"
 }
 ```
 
