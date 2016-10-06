@@ -8,15 +8,15 @@ def load(scope='default'):
     
     Args:
         scope: config file, without `.json`
+
+    Returns:
+        obj: formated json config object
     """
     
     if scope is 'default':
-        for scope in ['local', 'dev', 'prod']:
-            path = 'config/{}.json'.format(scope)
-            if os.path.exists(path):
-                config = load(scope)
-                if config:
-                    return config
+        config = load(default())
+        if config:
+            return config
                     
     else:
         path = 'config/{}.json'.format(scope)
@@ -27,7 +27,14 @@ def load(scope='default'):
 
                 #Default Values
 
-                _fillDefaultValue(obj, 'log', False)
+                _fillDefaultValue(obj, 'log', {})
+                _fillDefaultValue(obj['log'], 'file', False)
+                if type(obj['log']['file']) == str:
+                    obj['log']['file'] = {
+                        'debug': obj['log']['file'],
+                        'error': obj['log']['file']
+                    }
+                _fillDefaultValue(obj['log'], 'color', True)
 
                 _fillDefaultValue(obj, 'server', {})
                 _fillDefaultValue(obj['server'], 'port', 8888)
@@ -35,6 +42,19 @@ def load(scope='default'):
 
                 return obj
     raise EnvironmentError('No config file found')
+
+def default():
+    """
+    Gets default configuration file
+
+    Returns:
+        scope: config filename
+    """
+    for scope in ['local', 'dev', 'prod']:
+        path = 'config/{}.json'.format(scope)
+        if os.path.exists(path):
+            return scope
+    
 
 def _fillDefaultValue(obj, key, default):
     """
@@ -47,6 +67,3 @@ def _fillDefaultValue(obj, key, default):
     """
     if key not in obj:
         obj[key] = default
-
-#shortcut to current config
-value = load()

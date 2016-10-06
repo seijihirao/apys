@@ -1,4 +1,4 @@
-# apys - v0.2
+# apys - v0.3
 Wellcome to apys! A simple backend restful framework! 
 
 ## LANGUAGE
@@ -50,23 +50,29 @@ There are 3 special filenames:
 * `dev.json` - The development configuration file
 * `local.json` - The local configuration file (ignore in git)
 
->Note: They really work as following: the api tries to load `local.json`, then `dev.json`, then `prod.json`. So in the oficial release you will only have `prod.json`
+You can also force it to use a configuration with the `--config` or `-c` option:
+```
+$ apys -s --config=my_config
+```
+
+>Note: If no config file is choosen, they will work as following: the api tries to load `local.json`, then `dev.json`, then `prod.json`
 
 The current config special properties are the following:
 ```json
 {
-    "log": bool, //optional. default=False
-    "server": {
-        "port": int, //optional. default=8888
-        "cors": string or False //optional. default=False
+    "log": {
+        "file": { //optional. can be a string if it's used only a log file.
+            "debug": "string or false", //default=false. debug log file, false for sys.stdout
+            "error": "string or false", //default=false. debug error file, false for sys.stderr
+            //(...): "string or false" //optional. you can specify any other log file, but you will have to tell the `api.debug` function to use it
+        },
+        "color": "bool" //default=true
     },
-    "mail": {
-        "host": string,
-        "port": int, //optional. default=25 or 587 for TLS 
-        "tls": bool, //optional. default=False
-        "username?": string, //optional. no default
-        "password?": string //optional. no default
-    }
+    "server": {
+        "port": "int", //default=8888
+        "cors": "string or false" //default=false
+    },
+    //(...): (...) //you can add any other key and access it via `api.config['my_key']`
 }
 ```
 
@@ -134,7 +140,11 @@ any(req, api)
 
 ## EXAMPLE
 
-Look at the `demos/` for examples
+Look at the `demos/` for examples:
+
+1. `hello_world`: a simple hello world app, to learn the basics
+2. `multiple_endpoints`: a simpler app that resembles more a final product
+3. `log_to_file`: an example of logging in files
 
 ---
 

@@ -1,7 +1,5 @@
 {
     "server": {
-        "port": 8080,
-        "cors": false
-    },
-    "test": "Success on prod"
+        "port": 8080
+    }
 }

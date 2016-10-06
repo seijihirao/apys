@@ -36,7 +36,7 @@ def prepare(app, api, cors_url=False):
     #populate routes
     for file_path in file_paths:
         
-        # log.debug('Loading endpoint: [' + log.bcolors.HEADER + file_path['url'] + log.bcolors.ENDC + ']')
+        # api.debug('Loading endpoint: [' + api._bcolors.HEADER + file_path['url'] + api._bcolors.ENDC + ']')
         
         file_module = imp.load_source(file_path['url'].replace('/', '-'), file_path['file'])
 
@@ -89,6 +89,9 @@ def prepare(app, api, cors_url=False):
             return func
 
         # Adds route resource
+
+        api.debug('')
+        api.debug('================== Resources ====================')
         resource = cors.add(app.router.add_resource('/' + file_path['url']))
         loaded_methods = []
         for method in supported_methods:
@@ -106,11 +109,11 @@ def prepare(app, api, cors_url=False):
         # Logging loaded endpoints
         str_loaded_methods = '('
         for method in loaded_methods:
-            str_loaded_methods += log.bcolors.OKGREEN + method + log.bcolors.ENDC
+            str_loaded_methods += api._bcolors.OKGREEN + method + api._bcolors.ENDC
             str_loaded_methods += ', '
         str_loaded_methods = str_loaded_methods[0:-2]
         str_loaded_methods += ')'
-        log.debug('Endpoint Loaded: [' + log.bcolors.OKGREEN + file_path['url'] + log.bcolors.ENDC + '] ' + str_loaded_methods)
+        api.debug('Endpoint Loaded: [' + api._bcolors.OKGREEN + file_path['url'] + api._bcolors.ENDC + '] ' + str_loaded_methods)
     
     # Logging loades utils
     for root, subdirs, files in os.walk('./utils'):
@@ -118,8 +121,9 @@ def prepare(app, api, cors_url=False):
             if os.path.splitext(file)[1] == '.py':
                 util = os.path.splitext(file)[0]
                 if util in utils:
-                    log.debug('Util Loaded: [' + log.bcolors.OKBLUE + util + log.bcolors.ENDC + ']')
+                    api.debug('Util Loaded: [' + api._bcolors.OKBLUE + util + api._bcolors.ENDC + ']')
                 else:
-                    log.debug('Util not Loaded: [' + log.bcolors.WARNING + util + log.bcolors.ENDC + ']')
+                    api.debug('Util not Loaded: [' + api._bcolors.WARNING + util + api._bcolors.ENDC + ']')
     
+    api.debug('\n')
     return app

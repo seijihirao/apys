@@ -13,25 +13,32 @@ class _ApiObject(object):
         (will be added endpoint required util modules)
     """
 
-    vars = {}
-    
-    config = config.value
+    def __init__(self, config_file):
+        # Config file
+        self.config = config.load(config_file) if config_file else config.load()
 
-    supported_methods = [
-        'get', 
-        'post',
-        'put',
-        'delete',
-        'head',
-        'options',
-        'default'
-    ]
+        # Log
+        self._bcolors = log.bcolors if self.config['log']['color'] else log.nocolors
 
-    def debug(self, msg):
-        log.debug(msg)
+        # Supported methods
+        self.supported_methods = [
+            'get', 
+            'post',
+            'put',
+            'delete',
+            'head',
+            'options',
+            'default'
+        ]
+
+        # Shared variable
+        self.var = {}
+
+    def debug(self, msg, to='debug'):
+        log.debug(self, msg, to)
         
-    def error(self, msg):
-        log.error(msg)
+    def error(self, msg, to='debug', ex=False):
+        log.error(self, msg, to, ex)
 
-def mount():
-    return _ApiObject()
+def mount(config_file):
+    return _ApiObject(config_file)

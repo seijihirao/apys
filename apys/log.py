@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- 
-
-import sys
+# -*- coding: utf-8 -*-
 
 class bcolors:
     HEADER = '\033[95m'
@@ -13,30 +11,48 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-def start(where=sys.stdout):
-    """
-    Starts logging  
+class nocolors:
+    HEADER = ''
+    OKBLUE = ''
+    OKGREEN = ''
+    WARNING = ''
+    FAIL = ''
+    ENDC = ''
+    BOLD = ''
+    UNDERLINE = ''
     
-    Args:
-        where: where to log (default=sys.stdout)
-    """
-    pass
-    
-def debug(message):
+def debug(api, message, to):
     """
     Publish a message to the global log publisher.
     
     Args:
+        api: api object, implicity passed
         message: the log message
+        to='default': where to write message (defined on config)
     """
-    print(message)
+    if api.config['log']['file']:
+        with open(api.config['log']['file'][to], 'a') as f:
+            print(message, file=f)
+    else:
+        print(message)
     
-def error(message, excpection=Exception):
+def error(api, message, to, ex):
     """
     Publish an error to the global log publisher.
     
     Args:
+        api: api object, implicity passed
         message: the error message
-        exception: the exception type (default=Exception)
+        to='default': where to write message (defined on config)
+        ex: the exception type (default=Exception)
     """
-    print(bcolors.FAIL + message + bcolors.ENDC)
+    if ex:
+        message += '\n' + str(ex)
+
+    message = api._bcolors.FAIL + message + api._bcolors.ENDC
+
+    if api.config['log']['file']:
+        with open(api.config['log']['file'][to], 'a') as f:
+            print(message, file=f)
+    else:
+        print(message)

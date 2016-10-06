@@ -6,6 +6,9 @@ def main():
     parser.add_argument('-s', '--start', '--serve', 
                         action='store_true', default=False, 
                         help='starts server')
+    parser.add_argument('-c', '--config',
+                        action='store', default=False, 
+                        help='select config file')
     parser.add_argument('-i','--init',
                         action='store_true', default=False, 
                         help='initialize project folder')
@@ -23,7 +26,7 @@ def main():
 
     if args.start:
         from apys import server
-        server.start()
+        server.start(args.config)
     elif args.init:
         from apys import project
         project.init()

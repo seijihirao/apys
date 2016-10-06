@@ -1,0 +1,13 @@
+{
+    "log": {
+        "file": {
+            "debug": "rpg.log",
+            "error": "rpg.err.log",
+            "hero": "rpg.hero.log"
+        },
+        "color": false
+    },
+    "server": {
+        "port": 8080
+    }
+}

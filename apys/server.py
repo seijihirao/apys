@@ -1,17 +1,35 @@
+import sys
+
 from aiohttp import web
 
 from apys import apiobject, log, routes, config
 
-def start():
+def start(config_file):
     """
     Starts server
     """
 
-    log.start()
-
+    # Preparing environment
     app = web.Application()
-    global_api = apiobject.mount()
+    global_api = apiobject.mount(config_file)
+    
+    # Setting log files
+    if global_api.config['log']['file']:
+        f_out = open(global_api.config['log']['file']['debug'], 'a')
+        sys.stdout = f_out
 
-    routes.prepare(app, global_api, cors_url=config.value['server']['cors'])
+        f_err = open(global_api.config['log']['file']['error'], 'a')
+        sys.stderr = f_err
 
-    web.run_app(app, port=config.value['server']['port'])
+    # Preparing routes
+    routes.prepare(app, global_api, cors_url=global_api.config['server']['cors'])
+
+    # Start logging
+    start_str = '========== Using [' + global_api._bcolors.HEADER + '{}' + global_api._bcolors.ENDC + '] configuration =========='
+    if config_file:
+        global_api.debug(start_str.format(config_file))
+    else:
+        global_api.debug(start_str.format(config.default()))
+
+    # Running server
+    web.run_app(app, port=global_api.config['server']['port'])

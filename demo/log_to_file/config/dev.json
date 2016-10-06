@@ -1,0 +1,9 @@
+{
+    "log": {
+        "file": "rpg.log",
+        "color": false
+    },
+    "server": {
+        "port": 8080
+    }
+}
