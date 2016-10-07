@@ -125,5 +125,5 @@ def prepare(app, api, cors_url=False):
                 else:
                     api.debug('Util not Loaded: [' + api._bcolors.WARNING + util + api._bcolors.ENDC + ']')
     
-    api.debug('\n')
+    api.debug('')
     return app
