@@ -32,7 +32,7 @@ class _ApiObject(object):
         ]
 
         # Shared variable
-        self.var = {}
+        self.vars = {}
 
     def debug(self, msg, to='debug'):
         log.debug(self, msg, to)

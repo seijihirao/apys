@@ -1,3 +1,6 @@
+## v0.3.1
+Fixed vars variable
+
 # v0.3.0
 Added `--config` to command line to select config
 
