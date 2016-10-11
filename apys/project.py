@@ -15,17 +15,22 @@ def init():
 
     #configs
     _writeConfigFile('prod', {
-        'log': False,
         'server': {
             'port': 80,
             'cors': False
+        },
+        'log': {
+            'file': {
+                'debug': '/var/logs/apys/debug.log',
+                'debug': '/var/logs/apys/error.log'
+            },
+            'color': False
         }
     })
 
     _writeConfigFile('dev', {
-        'log': True,
         'server': {
-            'port': 8888,
+            'port': 8080,
             'cors': "*"
         }
     })
@@ -49,7 +54,7 @@ readme = """# MY PROJECT
 My project description
 
 ## LANGUAGE
-[Python](https://docs.python.org/3/)
+[Python >= 3.4.2](https://docs.python.org/3/)
 
 ## LIBRARIES
 * [apys](https://github.com/seijihirao/apys) - Backend restful framework
@@ -60,5 +65,11 @@ My project description
 
 ```
 $ apys -s
+```
+
+## TESTING
+
+```
+$ apys -t
 ```
 """
