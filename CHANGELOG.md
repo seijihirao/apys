@@ -1,7 +1,13 @@
+# v0.4
+Added versioning system (now `--version` is possible)
+
+## v0.3.2
+Little fix on logs
+
 ## v0.3.1
 Fixed vars variable
 
-# v0.3.0
+# v0.3
 Added `--config` to command line to select config
 
 Added `log` options to config, now it's possible to log to a file
@@ -16,11 +22,11 @@ Also possible to have no utils
 ## v0.2.1
 Fixed inexistent cors
 
-# v0.2.0
+# v0.2
 Added cors support
 
 ## v0.1.6
 Fixed readme (did I really need 6 patches? w/e)
 
-# v0.1.0
+# v0.1
 Created project

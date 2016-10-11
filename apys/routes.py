@@ -33,6 +33,9 @@ def prepare(app, api, cors_url=False):
     
     utils = {}
     
+    api.debug('')
+    api.debug('================== Resources ====================')
+    
     #populate routes
     for file_path in file_paths:
         
@@ -90,8 +93,6 @@ def prepare(app, api, cors_url=False):
 
         # Adds route resource
 
-        api.debug('')
-        api.debug('================== Resources ====================')
         resource = cors.add(app.router.add_resource('/' + file_path['url']))
         loaded_methods = []
         for method in supported_methods:

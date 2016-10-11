@@ -14,13 +14,19 @@ try:
 except (IOError, ImportError):
    description = ''
 
+try:
+    import apys
+    version = apys.version()
+except (IOError, ImportError):
+    version = '0.0.0'
+
 setup(
     name='apys',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.3.1',
+    version=version,
 
     description='A simple back-end rest framework in python using aiohttp lib',
     long_description=description,

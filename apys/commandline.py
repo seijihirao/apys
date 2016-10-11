@@ -20,7 +20,7 @@ def main():
                         help='run automated tests [not yet implemented]')
     parser.add_argument('-v', '--version',
                         action='store_true', default=False, 
-                        help='show lib version [not yet implemented]')
+                        help='show lib version')
     
     args = parser.parse_args()
 
@@ -30,5 +30,8 @@ def main():
     elif args.init:
         from apys import project
         project.init()
+    elif args.version:
+        import apys
+        print(apys.version())
     else:
         parser.print_help()
