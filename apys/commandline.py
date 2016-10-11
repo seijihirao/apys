@@ -32,6 +32,6 @@ def main():
         project.init()
     elif args.version:
         import apys
-        print(apys.version())
+        print(apys.__version__)
     else:
         parser.print_help()

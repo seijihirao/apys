@@ -16,7 +16,7 @@ except (IOError, ImportError):
 
 try:
     import apys
-    version = apys.version()
+    version = apys.__version__
 except (IOError, ImportError):
     version = '0.0.0'
 
