@@ -1,3 +1,9 @@
+## 0.4.2
+Tiny fixes
+
+## 0.4.1
+Fixed cors
+
 # v0.4
 Added versioning system (now `--version` is possible)
 

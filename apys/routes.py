@@ -15,8 +15,15 @@ def prepare(app, api, cors_url=False):
     Returns:
         application (cyclone.web.Application): cyclone application with endpoint routers mounted 
     """
-
-    cors = aiohttp_cors.setup(app)
+    
+    if cors_url:
+        cors = aiohttp_cors.setup(app, defaults={
+            cors_url: aiohttp_cors.ResourceOptions(
+                allow_credentials=True,
+                expose_headers="*",
+                allow_headers="*"
+            )
+        })
 
     file_paths = []
     
@@ -34,7 +41,7 @@ def prepare(app, api, cors_url=False):
     utils = {}
     
     api.debug('')
-    api.debug('================== Resources ====================')
+    api.debug('================== Resources ===================='  + ((api._bcolors.WARNING + ' cors-enabled=\'' + cors_url + '\'' + api._bcolors.ENDC) if cors_url else ''))
     
     #populate routes
     for file_path in file_paths:
@@ -72,10 +79,13 @@ def prepare(app, api, cors_url=False):
         def createFunc(endpoint, method):
             async def func(req):
 
-                if req.has_body:
-                    req.params = await req.json()
-                else:
-                    req.params = {}
+                try:
+                    if req.has_body:
+                        req.params = await req.json()
+                    else:
+                        req.params = {}
+                except Exception as ex:
+                    api.error('', ex=ex)
                 
                 if hasattr(endpoint, 'utils'):
                     for util in endpoint.utils:
@@ -93,7 +103,10 @@ def prepare(app, api, cors_url=False):
 
         # Adds route resource
 
-        resource = cors.add(app.router.add_resource('/' + file_path['url']))
+        if cors_url:
+            resource = cors.add(app.router.add_resource('/' + file_path['url']))
+        else: 
+            resource = app.router.add_resource('/' + file_path['url'])
         loaded_methods = []
         for method in supported_methods:
             if hasattr(file_module, method):
@@ -101,9 +114,7 @@ def prepare(app, api, cors_url=False):
                 loaded_methods += [method] # Log purpose
                 # Adds route
                 if cors_url:
-                    cors.add(resource.add_route(method.upper(), createFunc(file_module, method)), {
-                        cors_url: aiohttp_cors.ResourceOptions()
-                    })
+                    cors.add(resource.add_route(method.upper(), createFunc(file_module, method)))
                 else:
                     resource.add_route(method.upper(), createFunc(file_module, method))
         
