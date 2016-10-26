@@ -41,7 +41,8 @@ def load(scope='default'):
                 _fillDefaultValue(obj['server'], 'cors', False)
 
                 return obj
-    raise EnvironmentError('No config file found')
+
+    raise EnvironmentError('No config file found for ' + scope)
 
 def default():
     """
