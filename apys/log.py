@@ -47,7 +47,7 @@ def error(api, message, to, ex):
         ex: the exception type (default=Exception)
     """
     if ex:
-        message += '\n' + str(ex)
+        message = '\n' + message + '\n' + str(ex) + '\n'
 
     message = api._bcolors.FAIL + message + api._bcolors.ENDC
 

@@ -2,6 +2,9 @@ import os
 import sys
 import imp
 import json
+import re
+
+from collections import OrderedDict
 
 from aiohttp import web
 import aiohttp_cors
@@ -82,10 +85,11 @@ def prepare(app, api, cors_url=False):
                 try:
                     if req.has_body:
                         req.params = await req.json()
+                        req.params = __translateJson(req.params)
                     else:
                         req.params = {}
                 except Exception as ex:
-                    api.error('', ex=ex)
+                    api.error('Error while getting json data', ex=ex)
                 
                 if hasattr(endpoint, 'utils'):
                     for util in endpoint.utils:
@@ -139,3 +143,69 @@ def prepare(app, api, cors_url=False):
     
     api.debug('')
     return app
+
+def __translateJson(obj):
+    """
+    Gets a dictionary and formats its keys,
+    following the rules:
+
+        {'var[0]': 'value0', 'var[1]': 'value1'}
+        will be
+        {'var': ['value0', 'value1']}
+
+    And 
+    
+        {'var[key0]': 'value0', 'var[key1]': 'value1'}
+        will be
+        {'var': {'key0':'value0', 'key1':'value1'}}
+
+    Args:
+        obj - dictionary object to be converted
+    
+    Returns:
+        translated object
+    """
+    # Only translates a dictionary
+    if type(obj) != dict:
+        return obj
+
+    translated_obj = {}
+    for key in obj:
+        if re.match(r'^(\w+)\[(\w+)\]$', key):
+            main, sub = re.match(r'(\w+)\[(\w+)\]', key).groups()
+            if not main in translated_obj: 
+                translated_obj[main] = {}
+            translated_obj[main][sub] = __translateJson(obj[key])
+            
+        else:
+            translated_obj[key] = __translateJson(obj[key])       
+    
+    for key in translated_obj:
+        translated_obj[key] = __DictToList(translated_obj[key])  
+
+    return translated_obj
+
+def __DictToList(obj):
+    """
+    Converts a dictionary to a list
+
+        {'0':'value0', '1':'value1'}
+        will be
+        ['value0', 'value1']
+
+    Args:
+        obj - dictionary object to be converted
+    
+    Returns:
+        list if conversion was possible 
+    """
+    # Only converts a dictionary
+    if type(obj) != dict:
+        return obj
+    
+    # Checks if it really can be converted to a list
+    for key in obj:
+        if not key.isdigit():
+            return obj
+    
+    return list(OrderedDict(obj).values()) #needs an ordered dict to return list in order

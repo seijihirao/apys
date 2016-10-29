@@ -27,18 +27,18 @@ def load(scope='default'):
 
                 #Default Values
 
-                _fillDefaultValue(obj, 'log', {})
-                _fillDefaultValue(obj['log'], 'file', False)
+                __fillDefaultValue(obj, 'log', {})
+                __fillDefaultValue(obj['log'], 'file', False)
                 if type(obj['log']['file']) == str:
                     obj['log']['file'] = {
                         'debug': obj['log']['file'],
                         'error': obj['log']['file']
                     }
-                _fillDefaultValue(obj['log'], 'color', True)
+                __fillDefaultValue(obj['log'], 'color', True)
 
-                _fillDefaultValue(obj, 'server', {})
-                _fillDefaultValue(obj['server'], 'port', 8888)
-                _fillDefaultValue(obj['server'], 'cors', False)
+                __fillDefaultValue(obj, 'server', {})
+                __fillDefaultValue(obj['server'], 'port', 8888)
+                __fillDefaultValue(obj['server'], 'cors', False)
 
                 return obj
 
@@ -57,7 +57,7 @@ def default():
             return scope
     
 
-def _fillDefaultValue(obj, key, default):
+def __fillDefaultValue(obj, key, default):
     """
     Fill Default value if key does not exists on object
 
