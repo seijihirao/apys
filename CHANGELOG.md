@@ -4,22 +4,22 @@ Added json translation
 Now received
 ```json
 {
-    'var1[0]': 'value0', 
-    'var1[1]': 'value1',
-    'var2[key1]': 'value2',
-    'var2[key2]': 'value3'
+    "var1[0]": "value0", 
+    "var1[1]": "value1",
+    "var2[key1]": "value2",
+    "var2[key2]": "value3"
 }
 ```
 will be
 ```json
 {
-    'var1': [
-        'value0', 
-        'value1'
+    "var1": [
+        "value0", 
+        "value1"
     ],
-    'var2': {
-        'key1': 'value2',
-        'key2': 'value3'
+    "var2": {
+        "key1": "value2",
+        "key2": "value3"
     }
 }
 ```
