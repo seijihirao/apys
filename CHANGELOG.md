@@ -1,14 +1,14 @@
-## 0.5.2
+## v0.5.2
 "Tiny"' fix
 
-## 0.5.1
+## v0.5.1
 Now functions can be asynchronous.
 ```python
 async def post(req, api):
     return await my_async_function()
 ```
 
-# )0.5
+# v0.5
 Added json translation
 
 Now received
@@ -34,10 +34,10 @@ will be
 }
 ```
 
-## 0.4.2
+## v0.4.2
 Tiny fixes
 
-## 0.4.1
+## v0.4.1
 Fixed cors
 
 # v0.4
