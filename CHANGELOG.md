@@ -1,4 +1,14 @@
-# 0.5
+## 0.5.2
+"Tiny"' fix
+
+## 0.5.1
+Now functions can be asynchronous.
+```python
+async def post(req, api):
+    return await my_async_function()
+```
+
+# )0.5
 Added json translation
 
 Now received

@@ -3,6 +3,7 @@ import sys
 import imp
 import json
 import re
+import inspect
 
 from collections import OrderedDict
 
@@ -101,7 +102,12 @@ def prepare(app, api, cors_url=False):
                             getattr(utils[util], method)(req, handler_props['api'])
 
                 # Calls current method function
-                return web.json_response(getattr(endpoint, method)(req, handler_props['api']))
+                
+                func = getattr(endpoint, method)
+                if inspect.iscoroutinefunction(func):
+                    return web.json_response(await func(req, handler_props['api']))
+                else:
+                    return web.json_response(func(req, handler_props['api']))
 
             return func
 
