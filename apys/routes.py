@@ -82,7 +82,7 @@ def prepare(app, api, cors_url=False):
         #
         def createFunc(endpoint, method):
             async def func(req):
-
+                req.vars = {}
                 try:
                     if req.has_body:
                         req.params = await req.json()

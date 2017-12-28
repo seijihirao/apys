@@ -10,7 +10,7 @@ def init(api):
     Args:
         api - api object
     """
-    api.message = api.config['test'] # get 'test' value from config json
+    api.hello_world_message = api.config['test'] # get 'test' value from config json
     api.debug('App started')
 
 def get(req, api):
@@ -21,7 +21,7 @@ def get(req, api):
         req - request object
         api - api object
     """
-    req.message += 'get!'
+    req.hello_world_message += 'get!'
     api.debug('Get request success')
     
 def post(req, api):
@@ -32,7 +32,7 @@ def post(req, api):
         req - request object
         api - api object
     """
-    req.message += 'post!'
+    req.hello_world_message += 'post!'
     api.debug('Post request success')
 
 def any(req, api):
@@ -43,18 +43,18 @@ def any(req, api):
         req - request object
         api - api object
     """
-    req.message = api.message + ', in method '
+    req.hello_world_message = api.hello_world_message + ', in method '
     api.debug('Any request success')
 
-def insert_hello(message):
+def insert_hello(hello_world_message):
     """
     This is a custom function, and will be called only by you.
     It inserts the "Hello World""
 
     Args:
-        message
+        hello_world_message
     
     Return:
-        new message
+        new hello_world_message
     """
-    return 'HELLO WORLD!!! ' + message
+    return 'HELLO WORLD!!! ' + hello_world_message

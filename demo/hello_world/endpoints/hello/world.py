@@ -15,7 +15,7 @@ def get(req, api):
         string
     """
     
-    result = api.hello.insert_hello(req.message)
+    result = api.hello.insert_hello(req.hello_world_message)
     
     return result
 
@@ -37,5 +37,5 @@ def post(req, api):
 
     return {
         'request': message,
-        'result': api.hello.insert_hello(req.message)
+        'result': api.hello.insert_hello(req.hello_world_message)
     }

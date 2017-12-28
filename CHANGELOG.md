@@ -1,3 +1,6 @@
+## v0.5.3
+Works on python 3.6
+
 ## v0.5.2
 "Tiny"' fix
 
