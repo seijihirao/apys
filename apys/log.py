@@ -47,9 +47,9 @@ def error(api, message, to, ex):
         ex: the exception type (default=Exception)
     """
     if ex:
-        message = '\n' + message + '\n' + str(ex) + '\n'
+        message = '\n{}\n{}\n'.format(message, str(ex))
 
-    message = api._bcolors.FAIL + message + api._bcolors.ENDC
+    message = '{}{}{}'.format(api._bcolors.FAIL, message, api._bcolors.ENDC)
 
     if api.config['log']['file']:
         with open(api.config['log']['file'][to], 'a') as f:

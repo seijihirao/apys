@@ -10,17 +10,13 @@ from collections import OrderedDict
 from aiohttp import web
 import aiohttp_cors
 
-from apys import log
+from apys import log, settings
 
 #
 # CONSTANTS
 #
 
-DIR_ENDPOINTS = 'endpoints'
-DIR_UTILS = 'utils'
-
-ATTR_UTILS = DIR_UTILS
-
+ATTR_UTILS = settings.DIR_UTILS
 
 #
 # Functions
@@ -38,19 +34,19 @@ def prepare(app, api, cors_url=False):
         cors = aiohttp_cors.setup(app, defaults={
             cors_url: aiohttp_cors.ResourceOptions(
                 allow_credentials=True,
-                expose_headers="*",
-                allow_headers="*"
+                expose_headers='*',
+                allow_headers='*'
             )
         })
 
     file_paths = []
     
     #read all endpoint files
-    for root, subdirs, files in os.walk(os.path.join('.', DIR_ENDPOINTS)):
+    for root, subdirs, files in os.walk(os.path.join('.', settings.DIR_ENDPOINTS)):
         for file in files:
             if os.path.splitext(file)[1] == '.py':
                 file_paths += [{
-                    'url': os.path.splitext(os.path.relpath(os.path.join(root, file), DIR_ENDPOINTS))[0],
+                    'url': os.path.splitext(os.path.relpath(os.path.join(root, file), settings.DIR_ENDPOINTS))[0],
                     'file': os.path.join(root, file)
                 }]
     
@@ -59,12 +55,15 @@ def prepare(app, api, cors_url=False):
     utils = {}
     
     api.debug('')
-    api.debug('================== Resources ===================='  + ((api._bcolors.WARNING + ' cors-enabled=\'' + cors_url + '\'' + api._bcolors.ENDC) if cors_url else ''))
-    
+    if cors_url:
+        api.debug('================== Resources ==================== {}cors-enabled=\'{}\'{}'.format(api._bcolors.WARNING, cors_url, api._bcolors.ENDC))
+    else:
+        api.debug('================== Resources ====================')
+
     #populate routes
     for file_path in file_paths:
         
-        # api.debug('Loading endpoint: [' + api._bcolors.HEADER + file_path['url'] + api._bcolors.ENDC + ']')
+        # api.debug('Loading endpoint: [{}{}{}]'.format(api._bcolors.HEADER, file_path['url'], api._bcolors.ENDC))
         
         file_module = imp.load_source(file_path['url'].replace('/', '-'), file_path['file'])
 
@@ -82,7 +81,7 @@ def prepare(app, api, cors_url=False):
         if hasattr(file_module, ATTR_UTILS):
             for util in file_module.utils:
                 if not util in utils:
-                    utils[util] = imp.load_source(util, os.path.join(DIR_UTILS, util, '__init__.py'))
+                    utils[util] = imp.load_source(util, os.path.join(settings.DIR_UTILS, util, '__init__.py'))
                 setattr(handler_props['api'], util, utils[util])
                 
                 #calls util init function 
@@ -127,9 +126,9 @@ def prepare(app, api, cors_url=False):
         # Adds route resource
 
         if cors_url:
-            resource = cors.add(app.router.add_resource('/' + file_path['url']))
+            resource = cors.add(app.router.add_resource('/{}'.format(file_path['url'])))
         else: 
-            resource = app.router.add_resource('/' + file_path['url'])
+            resource = app.router.add_resource('/{}'.format(file_path['url']))
         loaded_methods = []
         for method in supported_methods:
             if hasattr(file_module, method):
@@ -148,17 +147,18 @@ def prepare(app, api, cors_url=False):
             str_loaded_methods += ', '
         str_loaded_methods = str_loaded_methods[0:-2]
         str_loaded_methods += ')'
-        api.debug('Endpoint Loaded: [' + api._bcolors.OKGREEN + file_path['url'] + api._bcolors.ENDC + '] ' + str_loaded_methods)
+        api.debug('Endpoint Loaded: [{}{}{}] {}'.format(api._bcolors.OKGREEN, file_path['url'], api._bcolors.ENDC, str_loaded_methods))
     
     # Logging loades utils
-    for subdir in os.listdir(os.path.join('.', DIR_UTILS)):
-        if((os.path.isdir(os.path.join('.', DIR_UTILS, subdir))) and
-            (os.path.exists(os.path.join('.', DIR_UTILS, subdir, '__init__.py')))):
-            util = subdir
-            if util in utils:
-                api.debug('Util Loaded: [' + api._bcolors.OKBLUE + util + api._bcolors.ENDC + ']')
-            else:
-                api.debug('Util not Loaded: [' + api._bcolors.WARNING + util + api._bcolors.ENDC + ']')
+    if os.path.exists(os.path.join('.', settings.DIR_UTILS)):
+        for subdir in os.listdir(os.path.join('.', settings.DIR_UTILS)):
+            if((os.path.isdir(os.path.join('.', settings.DIR_UTILS, subdir))) and
+                (os.path.exists(os.path.join('.', settings.DIR_UTILS, subdir, '__init__.py')))):
+                util = subdir
+                if util in utils:
+                    api.debug('Util Loaded: [{}{}{}]'.format(api._bcolors.OKBLUE, util, api._bcolors.ENDC))
+                else:
+                    api.debug('Util not Loaded: [{}{}{}]'.format(api._bcolors.WARNING, util, api._bcolors.ENDC))
     
     api.debug('')
     return app

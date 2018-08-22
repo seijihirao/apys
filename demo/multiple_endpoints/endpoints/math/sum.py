@@ -1,9 +1,7 @@
-"""
-Sums 2 numbers
-"""
-
 def post(req, api):
     """
+    Sums 2 numbers
+
     Args:
         x - Number
         y - Number
@@ -11,4 +9,4 @@ def post(req, api):
     Return:
         sum of both
     """
-    return req.params['x'] + req.params['y']
+    return req.body['x'] + req.body['y']

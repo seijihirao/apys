@@ -1,9 +1,7 @@
-"""
-Powers the first number by the second
-"""
-
 def post(req, api):
     """
+    Powers the first number by the second
+
     Args:
         x - Number
         power - Number
@@ -11,4 +9,5 @@ def post(req, api):
     Return:
         result of the power
     """
-    return req.params['x'] ** req.params['power']
+    print(req)
+    return req.body['x'] ** req.body['power']
