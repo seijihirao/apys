@@ -1,8 +1,12 @@
+## v0.6.0
+ * Utils now require a subdir to work, and a file named `__init__`.
+ * `req.params` removed, you now have to use `req.body` or `req.query` from aiohttp now.
+
 ## v0.5.3
 Works on python 3.6
 
 ## v0.5.2
-"Tiny"' fix
+"Tiny" fix
 
 ## v0.5.1
 Now functions can be asynchronous.

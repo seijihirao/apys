@@ -3,7 +3,7 @@ Start the server with `apys -s`
 """
 
 utils = [
-    'hello'
+    'my_lib'
 ]
 
 def get(req, api):
@@ -11,11 +11,21 @@ def get(req, api):
     Go to your browser and open `localhost:8888/hello/world`
     It should display a page with the message `HELLO WORLD!!! Success on local, in method get!`
     
+    
+    Input:
+        message: string
     Output:
         string
     """
-    
-    result = api.hello.insert_hello(req.hello_world_message)
+
+    result = api.my_lib.insert_hello(req.hello_world_message)
+
+    if('message' in req.query):
+        message = req.query['message']
+        result += ' - your message was: '
+        result += message if message else 'None'
+    else:
+        result += ' - you didn\'t send a message'
     
     return result
 
@@ -33,9 +43,9 @@ def post(req, api):
         result: string
     """
     
-    message = req.params['message']
+    message = req.body['message']
 
     return {
         'request': message,
-        'result': api.hello.insert_hello(req.hello_world_message)
+        'result': api.my_lib.insert_hello(req.hello_world_message)
     }

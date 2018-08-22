@@ -12,6 +12,20 @@ import aiohttp_cors
 
 from apys import log
 
+#
+# CONSTANTS
+#
+
+DIR_ENDPOINTS = 'endpoints'
+DIR_UTILS = 'utils'
+
+ATTR_UTILS = DIR_UTILS
+
+
+#
+# Functions
+#
+
 def prepare(app, api, cors_url=False):
     """
     Mount routers and add them to aiohttp application 
@@ -32,11 +46,11 @@ def prepare(app, api, cors_url=False):
     file_paths = []
     
     #read all endpoint files
-    for root, subdirs, files in os.walk('./endpoints'):
+    for root, subdirs, files in os.walk(os.path.join('.', DIR_ENDPOINTS)):
         for file in files:
             if os.path.splitext(file)[1] == '.py':
                 file_paths += [{
-                    'url': os.path.splitext(os.path.relpath(os.path.join(root, file), 'endpoints/'))[0],
+                    'url': os.path.splitext(os.path.relpath(os.path.join(root, file), DIR_ENDPOINTS))[0],
                     'file': os.path.join(root, file)
                 }]
     
@@ -62,15 +76,13 @@ def prepare(app, api, cors_url=False):
             'api': api
         }
         
-
-        handler_props['pypoly_utils_any'] = []
         ##
         # ADDING UTILS TO API PARAM
         #
-        if hasattr(file_module, 'utils'):
+        if hasattr(file_module, ATTR_UTILS):
             for util in file_module.utils:
                 if not util in utils:
-                    utils[util] = imp.load_source(util, os.path.join('utils', util + '.py'))
+                    utils[util] = imp.load_source(util, os.path.join(DIR_UTILS, util, '__init__.py'))
                 setattr(handler_props['api'], util, utils[util])
                 
                 #calls util init function 
@@ -84,15 +96,16 @@ def prepare(app, api, cors_url=False):
             async def func(req):
                 req.vars = {}
                 try:
+                    api.debug(req)
                     if req.has_body:
-                        req.params = await req.json()
-                        req.params = __translateJson(req.params)
+                        req.body = await req.json()
+                        req.body = __translateJson(req.body)
                     else:
-                        req.params = {}
+                        req.body = {}
                 except Exception as ex:
                     api.error('Error while getting json data', ex=ex)
                 
-                if hasattr(endpoint, 'utils'):
+                if hasattr(endpoint, ATTR_UTILS):
                     for util in endpoint.utils:
                         # Calls 'any' util function
                         if hasattr(utils[util], 'any'):
@@ -138,14 +151,14 @@ def prepare(app, api, cors_url=False):
         api.debug('Endpoint Loaded: [' + api._bcolors.OKGREEN + file_path['url'] + api._bcolors.ENDC + '] ' + str_loaded_methods)
     
     # Logging loades utils
-    for root, subdirs, files in os.walk('./utils'):
-        for file in files:
-            if os.path.splitext(file)[1] == '.py':
-                util = os.path.splitext(file)[0]
-                if util in utils:
-                    api.debug('Util Loaded: [' + api._bcolors.OKBLUE + util + api._bcolors.ENDC + ']')
-                else:
-                    api.debug('Util not Loaded: [' + api._bcolors.WARNING + util + api._bcolors.ENDC + ']')
+    for subdir in os.listdir(os.path.join('.', DIR_UTILS)):
+        if((os.path.isdir(os.path.join('.', DIR_UTILS, subdir))) and
+            (os.path.exists(os.path.join('.', DIR_UTILS, subdir, '__init__.py')))):
+            util = subdir
+            if util in utils:
+                api.debug('Util Loaded: [' + api._bcolors.OKBLUE + util + api._bcolors.ENDC + ']')
+            else:
+                api.debug('Util not Loaded: [' + api._bcolors.WARNING + util + api._bcolors.ENDC + ']')
     
     api.debug('')
     return app

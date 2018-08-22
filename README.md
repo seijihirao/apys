@@ -110,7 +110,7 @@ Where `[method]` is the http request type:
 
 `req` is *aiohttp*'s request, [documentation](http://aiohttp.readthedocs.io/en/stable/web_reference.html#request)
 
-> `req` has the `params` property to read the request body 
+> `req`'s property `body` only works for json works as of now
 
 `api` is the object that contains all api functionalities:
 * config - Configuration dictionary used in the actual scope
@@ -162,4 +162,4 @@ There are 2 ways to start the server
 
 Both the framework and this page are in development, so, subjected to changes.
 
->Version previous to v0.1.0 vas called [pypolyback](https://github.com/seijihirao/pypolyback) and used python 2.
+> Version previous to v0.1.0 vas called [pypolyback](https://github.com/seijihirao/pypolyback) and used python 2.
