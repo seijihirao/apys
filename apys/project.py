@@ -1,6 +1,6 @@
 import json, os
 
-from apys import config
+from apys import settings
 
 ##
 # CONSTANTS
@@ -56,8 +56,8 @@ def init():
         },
         'log': {
             'file': {
-                'debug': os.path.joint(settings.DEFAULT_PROD_LOG_DIR, settings.DEFAULT_PROD_LOG_DEBUG_FILE),
-                'debug': os.path.joint(settings.DEFAULT_PROD_LOG_DIR, settings.DEFAULT_PROD_LOG_ERROR_FILE)
+                'debug': os.path.join(settings.DEFAULT_PROD_LOG_DIR, settings.DEFAULT_PROD_LOG_DEBUG_FILE),
+                'debug': os.path.join(settings.DEFAULT_PROD_LOG_DIR, settings.DEFAULT_PROD_LOG_ERROR_FILE)
             },
             'color': settings.DEFAULT_PROD_COLOR
         }
