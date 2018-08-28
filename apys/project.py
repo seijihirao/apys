@@ -44,6 +44,7 @@ def init():
     dirs = [
         settings.DIR_CONFIG,
         settings.DIR_ENDPOINTS,
+        settings.DIR_FILTERS,
         settings.DIR_UTILS
     ]
     _createDirs(dirs)

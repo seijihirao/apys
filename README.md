@@ -86,9 +86,9 @@ i.e.: the file `endpoints/hello/world.py` will generate an endpoint `/hello/worl
 The file's code will be the following:
 ```python
 
-utils = [
-    '[util1]',
-    '[util2]'
+filters = [
+    '[filter1]',
+    '[filter2]'
 ]
 
 def [method](req, api):
@@ -106,7 +106,7 @@ Where `[method]` is the http request type:
 
 `[process]` is what you wan the endpoint to do (your code) 
 
-`[util1]` and `[util2]` are the *utils* scripts (without `.py`)
+`[filter1]` and `[filter2]` are the *filters* scripts executed before the endpoint is called (without `.py`)
 
 `req` is *aiohttp*'s request, [documentation](http://aiohttp.readthedocs.io/en/stable/web_reference.html#request)
 
@@ -117,20 +117,15 @@ Where `[method]` is the http request type:
 * debug - function to log messages
 * error - function to log errors
 
-### UTILS
+Also `api.web` contains `aiohttp.web`
 
-Python files with reusable code, to be called on endpoints.
+### FILTERS
 
-It will be a normal cod, but with some special funcions:
+Code that will that will be called before every request.
 
-init(api)
-
-    The function that will be executed on server startup
-    Only one time.
-    
 `[method]`(req, api) - `[method]` being the type of http request
     
-    The function that will be called before every request to the function with the same name on the endpoint.
+    The function that will be executed before every request to the function with the same name on the endpoint.
     Any result should be stored on the variable `req`, because it is the only local variable on the request.
     
 any(req, api)
@@ -138,12 +133,29 @@ any(req, api)
     The function that will be executed before any request.
     Note: thids function will be executed before the later.
 
+### UTILS
+
+Python files special functionality.
+
+It needs to be inside a dir and has some special files
+
+## __init__.py
+
+This file contains a funcion that will be called before initializing the api.
+
+init(api)
+
+    The function that will be executed on server startup
+    Only one time.
+
+> Useful for setting some api constants
+
 ## EXAMPLE
 
 Look at the `demos/` for examples:
 
 1. `hello_world`: a simple hello world app, to learn the basics
-2. `multiple_endpoints`: a simpler app that resembles more a final product
+2. `calculator`: a simpler app that resembles more a normal product
 3. `log_to_file`: an example of logging in files
 
 ---

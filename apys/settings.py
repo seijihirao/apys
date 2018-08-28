@@ -19,6 +19,7 @@ DEFAULT_CORS = False
 
 DIR_CONFIG = 'config'
 DIR_ENDPOINTS = 'endpoints'
+DIR_FILTERS = 'filters'
 DIR_UTILS = 'utils'
 
 DEFAULT_PROD_PORT = 80

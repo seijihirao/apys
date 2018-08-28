@@ -1,3 +1,7 @@
+## v1.0.0
+ * Utils now only have the `init` function, and don't need to be imported
+ * Filters now avaliable, and have the `[method]` and `any` function
+
 ## v0.6.0
  * Utils now require a subdir to work, and a file named `__init__`.
  * `req.params` removed, you now have to use `req.body` or `req.query` from aiohttp now.

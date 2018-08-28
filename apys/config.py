@@ -21,7 +21,6 @@ def load(scope='default'):
                     
     else:
         path = os.path.join(settings.DIR_CONFIG, '{}.json'.format(scope))
-        print(path)
         if os.path.exists(path):
             with open(path, 'r') as config:
                 obj = json.loads(config.read())

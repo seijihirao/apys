@@ -1,3 +1,5 @@
+import aiohttp
+
 from apys import config, log
 
 class _ApiObject(object):
@@ -33,6 +35,8 @@ class _ApiObject(object):
 
         # Shared variable
         self.vars = {}
+
+        self.web = aiohttp.web
 
     def debug(self, msg, to='debug'):
         log.debug(self, msg, to)

@@ -2,8 +2,8 @@
 Start the server with `apys -s`
 """
 
-utils = [
-    'my_lib'
+filters = [
+    'hello_world'
 ]
 
 def get(req, api):
@@ -18,14 +18,12 @@ def get(req, api):
         string
     """
 
-    result = api.my_lib.insert_hello(req.hello_world_message)
 
-    if('message' in req.query):
-        message = req.query['message']
-        result += ' - your message was: '
-        result += message if message else 'None'
-    else:
-        result += ' - you didn\'t send a message'
+    message = req.query['message']
+
+    result = req.hello_world_message
+    result += ' - your message was: '
+    result += message if message else 'None'
     
     return result
 
@@ -47,5 +45,5 @@ def post(req, api):
 
     return {
         'request': message,
-        'result': api.my_lib.insert_hello(req.hello_world_message)
+        'result': req.hello_world_message
     }
