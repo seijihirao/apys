@@ -1,10 +1,12 @@
 import aiohttp
+import aiohttp.web
 
 from apys import config, log
 
+
 class _ApiObject(object):
     """
-    Api properties that will be avaliable on endpoints
+    Api properties that will be available on endpoints
     
     Properties:
         vars: dictionary api custom variables
@@ -20,7 +22,7 @@ class _ApiObject(object):
         self.config = config.load(config_file) if config_file else config.load()
 
         # Log
-        self._bcolors = log.bcolors if self.config['log']['color'] else log.nocolors
+        self.bcolors = log.BColors if self.config['log']['color'] else log.NoColors
 
         # Supported methods
         self.supported_methods = [
@@ -43,6 +45,7 @@ class _ApiObject(object):
         
     def error(self, msg, to='debug', ex=False):
         log.error(self, msg, to, ex)
+
 
 def mount(config_file):
     return _ApiObject(config_file)

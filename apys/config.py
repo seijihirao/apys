@@ -3,16 +3,17 @@ import json
 
 from apys import settings
 
+
 def load(scope='default'):
     """
-    loads choosen config file
+    loads chosen config file
     if scope is not define loads default (first try `local`, then `dev` and last `prod`)
     
     Args:
         scope: config file, without `.json`
 
     Returns:
-        obj: formated json config object
+        obj: formatted json config object
     """
     if scope is 'default':
         config = load(default())
@@ -26,24 +27,25 @@ def load(scope='default'):
                 obj = json.loads(config.read())
                 obj['scope'] = scope
 
-                #Default Values
+                # Default Values
 
-                __fillDefaultValue(obj, 'log', {})
-                __fillDefaultValue(obj['log'], 'file', settings.DEFAULT_LOG)
+                __fill_default_value(obj, 'log', {})
+                __fill_default_value(obj['log'], 'file', settings.DEFAULT_LOG)
                 if type(obj['log']['file']) == str:
                     obj['log']['file'] = {
                         'debug': obj['log']['file'],
                         'error': obj['log']['file']
                     }
-                __fillDefaultValue(obj['log'], 'color', settings.DEFAULT_COLOR)
+                __fill_default_value(obj['log'], 'color', settings.DEFAULT_COLOR)
 
-                __fillDefaultValue(obj, 'server', {})
-                __fillDefaultValue(obj['server'], 'port', settings.DEFAULT_PORT)
-                __fillDefaultValue(obj['server'], 'cors', settings.DEFAULT_CORS)
+                __fill_default_value(obj, 'server', {})
+                __fill_default_value(obj['server'], 'port', settings.DEFAULT_PORT)
+                __fill_default_value(obj['server'], 'cors', settings.DEFAULT_CORS)
 
                 return obj
 
     raise EnvironmentError('No config file found for {}'.format(scope))
+
 
 def default():
     """
@@ -58,14 +60,14 @@ def default():
             return scope
     
 
-def __fillDefaultValue(obj, key, default):
+def __fill_default_value(obj, key, default_value):
     """
     Fill Default value if key does not exists on object
 
     Args:
-        obj: object to fill with default value
-        key: key that will be filled if inexistent
-        default: default value to be filled
+        obj: object to fill with default_value
+        key: key that will be filled if nonexistent
+        default_value: default_value value to be filled
     """
     if key not in obj:
-        obj[key] = default
+        obj[key] = default_value

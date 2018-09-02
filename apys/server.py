@@ -2,7 +2,8 @@ import sys
 
 from aiohttp import web
 
-from apys import apiobject, log, routes, config
+from apys import apiobject, routes, config
+
 
 def start(config_file):
     """
@@ -25,7 +26,7 @@ def start(config_file):
     routes.prepare(app, global_api, cors_url=global_api.config['server']['cors'])
 
     # Start logging
-    start_str = 'Using [' + global_api._bcolors.HEADER + '{}' + global_api._bcolors.ENDC + '] configuration\n'
+    start_str = 'Using [' + global_api.bcolors.HEADER + '{}' + global_api.bcolors.ENDC + '] configuration\n'
     if config_file:
         global_api.debug(start_str.format(config_file))
     else:

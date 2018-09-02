@@ -1,5 +1,6 @@
 import argparse
 
+
 def main():
 
     parser = argparse.ArgumentParser(description='apys - a restful api framework.')
@@ -9,7 +10,7 @@ def main():
     parser.add_argument('-c', '--config',
                         action='store', default=False, 
                         help='select config file')
-    parser.add_argument('-i','--init',
+    parser.add_argument('-i', '--init',
                         action='store_true', default=False, 
                         help='initialize project folder')
     parser.add_argument('-b', '--build', 

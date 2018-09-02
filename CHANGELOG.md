@@ -1,6 +1,9 @@
+## v1.0.1
+ * Using importlib instead of imp
+
 ## v1.0.0
  * Utils now only have the `init` function, and don't need to be imported
- * Filters now avaliable, and have the `[method]` and `any` function
+ * Filters now available, and have the `[method]` and `any` function
 
 ## v0.6.0
  * Utils now require a subdir to work, and a file named `__init__`.
@@ -16,7 +19,7 @@ Works on python 3.6
 Now functions can be asynchronous.
 ```python
 async def post(req, api):
-    return await my_async_function()
+    return await api.my_async_function()
 ```
 
 # v0.5
@@ -52,7 +55,7 @@ Tiny fixes
 Fixed cors
 
 # v0.4
-Added versioning system (now `--version` is possible)
+Added version system (now `--version` is possible)
 
 ## v0.3.2
 Little fix on logs
@@ -73,7 +76,7 @@ Now it is possible to have multiple endpoints (it was impossible before? Yes...)
 Also possible to have no utils
 
 ## v0.2.1
-Fixed inexistent cors
+Fixed nonexistent cors
 
 # v0.2
 Added cors support
