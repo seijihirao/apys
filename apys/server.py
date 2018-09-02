@@ -5,7 +5,7 @@ from aiohttp import web
 from apys import apiobject, routes, config
 
 
-def start(config_file):
+def start(config_file=None):
     """
     Starts server
     """
