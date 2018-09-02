@@ -1,6 +1,7 @@
 import os
 import sys
-import imp
+import importlib
+import importlib.util
 import json
 import re
 import inspect
@@ -73,7 +74,10 @@ def prepare(app, api, cors_url=False):
                 (os.path.exists(os.path.join('.', settings.DIR_UTILS, subdir, '__init__.py')))):
                 util = subdir
                 if util not in utils:
-                    utils[util] = imp.load_source(util, os.path.join('.', settings.DIR_UTILS, util, '__init__.py'))
+                    spec = importlib.util.spec_from_file_location(util, os.path.join('.', settings.DIR_UTILS, util, '__init__.py'))
+                    utils[util] = importlib.util.module_from_spec(spec)
+                    spec.loader.exec_module(utils[util])
+
                     setattr(api, util, utils[util])
                 
                     # calls util init function 
@@ -83,7 +87,9 @@ def prepare(app, api, cors_url=False):
     # populate routes
     for file_path in file_paths:
 
-        file_module = imp.load_source(file_path['url'].replace('/', '-'), file_path['file'])
+        spec = importlib.util.spec_from_file_location(file_path['url'].replace('/', '-'), file_path['file'])
+        file_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(file_module)
 
         supported_methods = api.supported_methods
 
@@ -100,7 +106,9 @@ def prepare(app, api, cors_url=False):
         if hasattr(file_module, ATTR_FILTERS):
             for filt in file_module.filters:
                 if not filt in filters:
-                    filters[filt] = imp.load_source(filt, '{}.py'.format(os.path.join(settings.DIR_FILTERS, *(filt.split('.')))))
+                    spec = importlib.util.spec_from_file_location(filt, '{}.py'.format(os.path.join(settings.DIR_FILTERS, *(filt.split('.')))))
+                    filters[filt] = importlib.util.module_from_spec(spec)
+                    spec.loader.exec_module(filters[filt])
 
                     #calls util init function 
                     if hasattr(filters[filt], 'init'):
