@@ -3,5 +3,8 @@
         "port": 8080,
         "cors": "*"
     },
+    "utils": [
+        "hello_world_message"
+    ],
     "test": "Success on dev"
 }

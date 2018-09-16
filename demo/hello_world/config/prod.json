@@ -3,5 +3,8 @@
         "port": 8080,
         "cors": false
     },
+    "utils": [
+        "hello_world_message"
+    ],
     "test": "Success on prod"
 }

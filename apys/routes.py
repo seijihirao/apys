@@ -67,27 +67,24 @@ def prepare(app, api, cors_url=''):
     ##
     # ADDING UTILS TO API PARAM
     #
-    if os.path.exists(os.path.join('.', settings.DIR_UTILS)):
-        for subdir in os.listdir(os.path.join('.', settings.DIR_UTILS)):
-            if(
-                (os.path.isdir(os.path.join('.', settings.DIR_UTILS, subdir))) and
-                (os.path.exists(os.path.join('.', settings.DIR_UTILS, subdir, '__init__.py')))
-            ):
+    for util in api.config['utils']:
+        if(
+            (os.path.isdir(os.path.join('.', settings.DIR_UTILS, util))) and
+            (os.path.exists(os.path.join('.', settings.DIR_UTILS, util, '__init__.py')))
+        ):
+            if util not in utils:
+                spec = importlib.util.spec_from_file_location(
+                    util,
+                    os.path.join('.', settings.DIR_UTILS, util, '__init__.py'))
 
-                util = subdir
-                if util not in utils:
-                    spec = importlib.util.spec_from_file_location(
-                        util,
-                        os.path.join('.', settings.DIR_UTILS, util, '__init__.py'))
+                utils[util] = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(utils[util])
 
-                    utils[util] = importlib.util.module_from_spec(spec)
-                    spec.loader.exec_module(utils[util])
+                setattr(api, util, utils[util])
 
-                    setattr(api, util, utils[util])
-                
-                    # calls util init function 
-                    if hasattr(utils[util], 'init'):
-                        utils[util].init(api)
+                # calls util init function
+                if hasattr(utils[util], 'init'):
+                    utils[util].init(api)
 
     # populate routes
     for file_path in file_paths:
