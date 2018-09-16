@@ -9,7 +9,8 @@ Wellcome to apys! A simple backend restful framework!
 
 ---
 
-## INSTALATION
+## INSTALLATION
+
 1. Install python 3
     * Windows - [Link](https://www.python.org/download/releases/3.5/)
     * Ubuntu - `sudo apt-get install python`
@@ -26,7 +27,7 @@ Wellcome to apys! A simple backend restful framework!
 ---
 
 
-## INITIALIZATING PROJECT
+## INITIALIZING PROJECT
 
 ```
 $ apys --init
@@ -39,14 +40,15 @@ $ apys --init
 ### DIRECTORIES
     /config - json configuration files
     /endpoints - backend endpoints
-    /utils - helper script files  
+    /filters - script files to execute before the endpoint  
+    /utils - script files to execute when server starts
 
 ### CONFIG
 Here are the configuration files used in the app.
 They will be send to the endpoint via param `api.config`
 
-There are 3 special filenames:
-* `prod.json` - The oficial configuration file 
+There are 3 special file names:
+* `prod.json` - The production configuration file 
 * `dev.json` - The development configuration file
 * `local.json` - The local configuration file (ignore in git)
 
@@ -55,7 +57,7 @@ You can also force it to use a configuration with the `--config` or `-c` option:
 $ apys -s --config=my_config
 ```
 
->Note: If no config file is choosen, they will work as following: the api tries to load `local.json`, then `dev.json`, then `prod.json`
+>Note: If no config file is chosen, they will work as following: the api tries to load `local.json`, then `dev.json`, then `prod.json`
 
 The current config special properties are the following:
 ```json
@@ -87,15 +89,15 @@ The file's code will be the following:
 ```python
 
 filters = [
-    '[filter1]',
-    '[filter2]'
+    'filter1',
+    ['filter2', 'filter3']
 ]
 
-def [method](req, api):
-    [process]
+def method(req, api):
+    pass # process
 ``` 
 
-Where `[method]` is the http request type:
+Where `method` is the http request type:
 * post
 * get
 * put
@@ -104,9 +106,11 @@ Where `[method]` is the http request type:
 * options
 * default - executed when a request is made for any of the above, but it is not implemented 
 
-`[process]` is what you wan the endpoint to do (your code) 
+`process` is what you wan the endpoint to do (your code) 
 
-`[filter1]` and `[filter2]` are the *filters* scripts executed before the endpoint is called (without `.py`)
+`filter1`, `filter2` and `filter3` are the *filters* scripts (without `.py`) executed before the endpoint is called
+
+> If you put your filter inside an array the error they return will be returned only if ALL of them return some error 
 
 `req` is *aiohttp*'s request, [documentation](http://aiohttp.readthedocs.io/en/stable/web_reference.html#request)
 
@@ -123,7 +127,7 @@ Also `api.web` contains `aiohttp.web`
 
 Code that will that will be called before every request.
 
-`[method]`(req, api) - `[method]` being the type of http request
+`method`(req, api) - `method` being the type of http request
     
     The function that will be executed before every request to the function with the same name on the endpoint.
     Any result should be stored on the variable `req`, because it is the only local variable on the request.
@@ -141,7 +145,7 @@ It needs to be inside a dir and has some special files
 
 ## __init__.py
 
-This file contains a funcion that will be called before initializing the api.
+This file contains a function that will be called before initializing the api.
 
 init(api)
 
@@ -157,6 +161,7 @@ Look at the `demos/` for examples:
 1. `hello_world`: a simple hello world app, to learn the basics
 2. `calculator`: a simpler app that resembles more a normal product
 3. `log_to_file`: an example of logging in files
+4. `user_role`: an advanced example on filters
 
 ---
 
@@ -164,9 +169,9 @@ Look at the `demos/` for examples:
 
 There are 2 ways to start the server
 
-1. Execute `apys -s` from terminal on your root project folder (Recomended)
+1. Execute `apys -s` from terminal on your root project folder (Recommended)
 
-2. Call the method `start()` from module `apys.server` (Only recomended if you need to do something before starting the server)
+2. Call the method `start()` from module `apys.server`
 
 ---
 

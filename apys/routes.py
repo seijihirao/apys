@@ -108,26 +108,44 @@ def prepare(app, api, cors_url=''):
         ##
         # ADDING FILTER TO LIST
         #
+
+        def add_filters(cur_filter):
+            if cur_filter not in filters:
+                filter_spec = importlib.util.spec_from_file_location(
+                    cur_filter,
+                    '{}.py'.format(os.path.join(settings.DIR_FILTERS, *(cur_filter.split('.')))))
+
+                filters[cur_filter] = importlib.util.module_from_spec(filter_spec)
+                filter_spec.loader.exec_module(filters[cur_filter])
+
+                # calls util init function
+                if hasattr(filters[cur_filter], 'init'):
+                    filters[cur_filter].init(api)
+
+                loaded_filters[cur_filter] = filters[cur_filter]
+
         if hasattr(file_module, ATTR_FILTERS):
             for filt in file_module.filters:
-                if filt not in filters:
-                    spec = importlib.util.spec_from_file_location(
-                        filt,
-                        '{}.py'.format(os.path.join(settings.DIR_FILTERS, *(filt.split('.')))))
 
-                    filters[filt] = importlib.util.module_from_spec(spec)
-                    spec.loader.exec_module(filters[filt])
+                if type(filt) == str:
+                    add_filters(filt)
+                elif type(filt) == list:
+                    for f in filt:
+                        add_filters(f)
 
-                    # calls util init function
-                    if hasattr(filters[filt], 'init'):
-                        filters[filt].init(api)
-
-                loaded_filters[filt] = filters[filt]
 
         ##
         # ADDING METHOD FUNCTIONS
         #
         def create_func(endpoint, cur_method):
+
+            def exec_filter(req, cur_filter):
+                # Calls 'any' filt function
+                if hasattr(filters[cur_filter], 'any'):
+                    filters[cur_filter].any(req, handler_props['api'])
+                # Calls current method filt function
+                if hasattr(filters[cur_filter], cur_method):
+                    getattr(filters[cur_filter], cur_method)(req, handler_props['api'])
 
             ##
             # This is what gets executed when you call the endpoint
@@ -141,16 +159,29 @@ def prepare(app, api, cors_url=''):
                     else:
                         req.body = {}
                 except Exception as ex:
-                    api.error('Error while getting json data', ex=ex)
+                    str_err = 'Error while getting json data'
+                    api.error(str_err, ex=ex)
+                    raise handler_props['api'].web.HTTPInternalServerError(reason=str_err)
                 
                 if hasattr(endpoint, ATTR_FILTERS):
                     for cur_filter in endpoint.filters:
-                        # Calls 'any' filt function
-                        if hasattr(filters[cur_filter], 'any'):
-                            filters[cur_filter].any(req, handler_props['api'])
-                        # Calls current method filt function
-                        if hasattr(filters[cur_filter], cur_method):
-                            getattr(filters[cur_filter], cur_method)(req, handler_props['api'])
+                        if type(cur_filter) == str:
+                            exec_filter(req, cur_filter)
+                        elif type(cur_filter) == list:
+                            exception = None
+                            for f in cur_filter:
+                                exception = None
+
+                                try:
+                                    exec_filter(req, f)
+                                except Exception as ex:
+                                    exception = ex
+
+                                if exception is None:
+                                    break
+
+                            if exception is not None:
+                                raise exception
 
                 # Calls current method function
                 

@@ -1,0 +1,12 @@
+{
+    "server": {
+        "port": 80,
+        "cors": false
+    },
+    "log": {
+        "file": {
+            "debug": "/var/logs/apys/error.log"
+        },
+        "color": false
+    }
+}

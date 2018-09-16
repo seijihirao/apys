@@ -9,10 +9,10 @@ from setuptools import setup, find_packages
 
 # Getting description from readme
 try:
-   import pypandoc
-   description = pypandoc.convert('README.md', 'rst')
+    import pypandoc
+    description = pypandoc.convert('README.md', 'rst')
 except (IOError, ImportError):
-   description = ''
+    description = ''
 
 try:
     import apys
