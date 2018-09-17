@@ -137,9 +137,9 @@ def prepare(app, api, cors_url=''):
         def create_func(endpoint, cur_method):
 
             def exec_filter(req, cur_filter):
-                # Calls 'any' filt function
-                if hasattr(filters[cur_filter], 'any'):
-                    filters[cur_filter].any(req, handler_props['api'])
+                # Calls 'always' filt function
+                if hasattr(filters[cur_filter], 'always'):
+                    filters[cur_filter].always(req, handler_props['api'])
                 # Calls current method filt function
                 if hasattr(filters[cur_filter], cur_method):
                     getattr(filters[cur_filter], cur_method)(req, handler_props['api'])
@@ -213,7 +213,7 @@ def prepare(app, api, cors_url=''):
 
             str_loaded_filters = ''
             for filt in loaded_filters:
-                if hasattr(loaded_filters[filt], 'any'):
+                if hasattr(loaded_filters[filt], 'always'):
                     str_loaded_filters += '{}{}{}'.format(api.bcolors.OKBLUE, filt, api.bcolors.ENDC)
                     str_loaded_filters += ', '
                 if hasattr(loaded_filters[filt], method):

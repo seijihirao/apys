@@ -132,10 +132,10 @@ Code that will that will be called before every request.
     The function that will be executed before every request to the function with the same name on the endpoint.
     Any result should be stored on the variable `req`, because it is the only local variable on the request.
     
-any(req, api)
+always(req, api)
     
     The function that will be executed before any request.
-    Note: thids function will be executed before the later.
+    Note: this function will be executed before the other filters.
 
 ### UTILS
 
