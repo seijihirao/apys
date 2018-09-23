@@ -8,11 +8,8 @@ https://github.com/pypa/sampleproject
 from setuptools import setup, find_packages
 
 # Getting description from readme
-try:
-    import pypandoc
-    description = pypandoc.convert('README.md', 'rst')
-except (IOError, ImportError):
-    description = ''
+import pypandoc
+description = pypandoc.convert('README.md', 'rst')
 
 try:
     import apys
