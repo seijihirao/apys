@@ -9,13 +9,13 @@ from setuptools import setup, find_packages
 
 # Getting description from readme
 import pypandoc
-description = pypandoc.convert('README.md', 'rst')
+description = pypandoc.convert_file('README.md', 'rst')
 
 try:
     import apys
     version = apys.__version__
 except (IOError, ImportError):
-    version = '0.0.0'
+    version = 'Error, could not get version'
 
 setup(
     name='apys',
@@ -59,6 +59,7 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
     ],
 
     # What does your project relate to?
