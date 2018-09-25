@@ -231,7 +231,7 @@ def prepare(app, api, cors_url=''):
         api.debug('Util Loaded: [{}{}{}]'.format(api.bcolors.OKBLUE, util, api.bcolors.ENDC))
     
     api.debug('')
-    return app
+    return file_paths
 
 
 def __translate_json(obj):

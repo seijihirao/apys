@@ -1,0 +1,44 @@
+{
+  "setup": {
+    "var": {
+      "x": {
+        "gen": "int",
+        "min": 0,
+        "max": 99
+      },
+      "y": {
+        "gen": "int",
+        "min": 0,
+        "max": 99
+      }
+    }
+  },
+  "tests": [
+    {
+      "description": "Success",
+      "method": "post",
+      "input": {
+        "x": "var['x']",
+        "y": "var['y']"
+      },
+      "output": "var['x'] + var['y']"
+    },
+    {
+      "description": "Error 422 - missing x",
+      "method": "post",
+      "input": {
+        "power": "var['y']"
+      },
+      "error": 422
+    },
+    {
+      "description": "Error 422 - missing y",
+      "method": "post",
+      "input": {
+        "x": "var['x']"
+      },
+      "error": 422
+    }
+  ]
+
+}

@@ -147,12 +147,38 @@ It needs to be inside a dir and has some special files
 
 This file contains a function that will be called before initializing the api.
 
-init(api)
+```python
+def init(api):
+    pass
+```
 
     The function that will be executed on server startup
     Only one time.
 
 > Useful for setting some api constants
+
+## __cli__.py
+
+This file contains a function that will add a commandline argument.
+
+The util flags will be `--[util_name]` and `--[util_name_first_char]`
+
+> util name is test, so flags should be `--test` and `-t`
+
+```python
+class CLI:
+    def __init__(self, result):
+        # See `parser.add_argument` doc for information on these
+        self.action = 'store_true'
+        self.default = False
+        self.help = 'It makes everything shine'
+        
+        # store the result the user input
+        self.result = result
+    
+    def start(self, api, endpoints):
+        pass
+ ```
 
 ## EXAMPLE
 
@@ -162,6 +188,7 @@ Look at the `demos/` for examples:
 2. `calculator`: a simpler app that resembles more a normal product
 3. `log_to_file`: an example of logging in files
 4. `user_role`: an advanced example on filters
+4. `unit_testing`: an advanced example on adding cli arguments
 
 ---
 

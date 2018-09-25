@@ -4,7 +4,7 @@ import aiohttp.web
 from apys import config, log
 
 
-class _ApiObject(object):
+class ApiObject:
     """
     Api properties that will be available on endpoints
     
@@ -19,6 +19,7 @@ class _ApiObject(object):
 
     def __init__(self, config_file):
         # Config file
+        self.config_file = config_file
         self.config = config.load(config_file) if config_file else config.load()
 
         # Log
@@ -46,6 +47,6 @@ class _ApiObject(object):
     def error(self, msg, to='debug', ex=False):
         log.error(self, msg, to, ex)
 
+    def __reduce__(self):
+        return ApiObject, (self.config_file, )
 
-def mount(config_file):
-    return _ApiObject(config_file)
