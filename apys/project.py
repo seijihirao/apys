@@ -57,14 +57,16 @@ def init():
                 'error': os.path.join(settings.DEFAULT_PROD_LOG_DIR, settings.DEFAULT_PROD_LOG_ERROR_FILE)
             },
             'color': settings.DEFAULT_PROD_COLOR
-        }
+        },
+        'utils': []
     })
 
     __write_config_file(settings.DEFAULT_DEV_NAME, {
         'server': {
             'port': settings.DEFAULT_DEV_PORT,
             'cors': settings.DEFAULT_DEV_CORS
-        }
+        },
+        'utils': []
     })
 
     # readme
