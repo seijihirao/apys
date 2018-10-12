@@ -74,7 +74,7 @@ The current config special properties are the following:
         "port": "int //default=8888",
         "cors": "string or false //default=false"
     },
-    "utils": ["string"] // default=[]. list of utils in order to load
+    "utils": ["string //default=[]. list of utils in order to load"],
     "(...)": "(...) //you can add any other key and access it via `api.config['my_key']`"
 }
 ```
