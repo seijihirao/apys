@@ -1,4 +1,4 @@
-# apys - v2.0
+# apys - v2.1
 Wellcome to apys! A simple backend restful framework! 
 
 ## LANGUAGE
@@ -174,7 +174,7 @@ class CLI:
         self.default = False
         self.help = 'It makes everything shine'
         
-        # store the result the user input
+        # store the result of user input
         self.result = result
     
     def start(self, api, endpoints):
