@@ -51,40 +51,8 @@ def prepare(app, api, cors_url=''):
                     'url': os.path.splitext(os.path.relpath(os.path.join(root, file), settings.DIR_ENDPOINTS))[0],
                     'file': os.path.join(root, file)
                 }]
-    
-    utils = {}
+
     filters = {}
-    
-    api.debug('')
-    if cors_url:
-        api.debug('================== Resources ==================== {}cors-enabled=\'{}\'{}'.format(
-            api.bcolors.WARNING, cors_url, api.bcolors.ENDC))
-    else:
-        api.debug('================== Resources ====================')
-
-    api.debug('')
-    
-    ##
-    # ADDING UTILS TO API PARAM
-    #
-    for util in api.config['utils']:
-        if(
-            (os.path.isdir(os.path.join('.', settings.DIR_UTILS, util))) and
-            (os.path.exists(os.path.join('.', settings.DIR_UTILS, util, '__init__.py')))
-        ):
-            if util not in utils:
-                spec = importlib.util.spec_from_file_location(
-                    util,
-                    os.path.join('.', settings.DIR_UTILS, util, '__init__.py'))
-
-                utils[util] = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(utils[util])
-
-                setattr(api, util, utils[util])
-
-                # calls util init function
-                if hasattr(utils[util], 'init'):
-                    utils[util].init(api)
 
     # populate routes
     for file_path in file_paths:
@@ -223,12 +191,6 @@ def prepare(app, api, cors_url=''):
             
             api.debug('Endpoint Loaded: [{}{}{}] ({}) <- {{{}}}'.format(
                 api.bcolors.OKGREEN, file_path['url'], api.bcolors.ENDC, str_loaded_methods, str_loaded_filters))
-    
-    api.debug('')
-
-    # Logging loads utils
-    for util in utils:
-        api.debug('Util Loaded: [{}{}{}]'.format(api.bcolors.OKBLUE, util, api.bcolors.ENDC))
     
     api.debug('')
     return file_paths

@@ -1,7 +1,10 @@
 import aiohttp
 import aiohttp.web
+import os
+import importlib
+import importlib.util
 
-from apys import config, log
+from apys import config, log, settings
 
 
 class ApiObject:
@@ -40,6 +43,46 @@ class ApiObject:
         self.vars = {}
 
         self.web = aiohttp.web
+
+        ##
+        # ADDING UTILS TO API PARAM
+        #
+        utils = {}
+        for util in self.config['utils']:
+            if (
+                    (os.path.isdir(os.path.join('.', settings.DIR_UTILS, util))) and
+                    (os.path.exists(os.path.join('.', settings.DIR_UTILS, util, '__init__.py')))
+            ):
+                if util not in utils:
+                    spec = importlib.util.spec_from_file_location(
+                        util,
+                        os.path.join('.', settings.DIR_UTILS, util, '__init__.py'))
+
+                    utils[util] = importlib.util.module_from_spec(spec)
+                    spec.loader.exec_module(utils[util])
+
+                    setattr(self, util, utils[util])
+
+                    # calls util init function
+                    if hasattr(utils[util], 'init'):
+                        utils[util].init(self)
+
+        # Starts Logging Resources
+        self.debug('')
+        cors_url = self.config['server']['cors']
+        if cors_url:
+            self.debug('================== Resources ==================== {}cors-enabled=\'{}\'{}'.format(
+                self.bcolors.WARNING, cors_url, self.bcolors.ENDC))
+        else:
+            self.debug('================== Resources ====================')
+
+        self.debug('')
+
+        # Logging loaded utils
+        for util in utils:
+            self.debug('Util Loaded: [{}{}{}]'.format(self.bcolors.OKBLUE, util, self.bcolors.ENDC))
+
+        self.debug('')
 
     def debug(self, msg, to='debug'):
         log.debug(self, msg, to)
