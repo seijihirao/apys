@@ -1,33 +1,19 @@
 {
-  "setup": {
-    "var": {
-      "x": {
-        "gen": "int",
-        "min": 0,
-        "max": 99
-      },
-      "power": {
-        "gen": "int",
-        "min": 0,
-        "max": 99
-      }
-    }
-  },
   "tests": [
     {
       "description": "Success",
       "method": "post",
       "input": {
-        "x": "var['x']",
-        "power": "var['power']"
+        "x": 3,
+        "power": 4
       },
-      "output": "var['x'] ** var['power']"
+      "output": 81
     },
     {
       "description": "Error 422 - missing x",
       "method": "post",
       "input": {
-        "power": "var['power']"
+        "power": 3
       },
       "error": 422
     },
@@ -35,7 +21,7 @@
       "description": "Error 422 - missing power",
       "method": "post",
       "input": {
-        "x": "var['x']"
+        "x": 4
       },
       "error": 422
     }

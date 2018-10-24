@@ -100,5 +100,5 @@ setup(
 # # python setup.py bdist_wheel
 #
 # Upload to Pypi
-# # twine upload dist/apys-x.y.z-py-none-any.whl
+# # twine upload dist/apys-x.y.z-py3-none-any.whl
 # # # x.y.z - is the actual version

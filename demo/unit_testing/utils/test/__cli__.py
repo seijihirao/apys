@@ -4,10 +4,6 @@ import json
 import random
 import contextlib
 
-RANDOM_FUNCTIONS = {
-    'int': random.randint
-}
-
 
 class CLI:
 
@@ -16,6 +12,7 @@ class CLI:
         self.default = False
         self.help = 'Unit test your app'
         self.result = result
+        self.config = 'tests'
 
     async def start(self, api, endpoints):
         """
@@ -45,14 +42,8 @@ class CLI:
                     with open(path, 'r') as test_file:
                         tests_json = json.loads(test_file.read())
 
-                        if 'setup' in tests_json:
-                            if 'var' in tests_json['setup']:
-                                var = CLI.__gen_dict_values(tests_json['setup']['var'])
-
                         tests = tests_json['tests']
                         for test in tests:
-                            # Get input values
-                            test['input'] = CLI.__exec_dict_values(test['input'], var)
 
                             # Make request
                             with open(os.devnull, "w") as f, contextlib.redirect_stdout(f):  # disable logs
@@ -76,7 +67,6 @@ class CLI:
 
                             # Success expected
                             else:
-                                test['output'] = CLI.__exec_dict_values(test['output'], var)
                                 if test['output'] == await response.json():
                                     api.debug('{}[OK] {}{}'.format(
                                         api.bcolors.OKGREEN, test['description'], api.bcolors.ENDC))
@@ -103,48 +93,3 @@ class CLI:
             api.bcolors.HEADER, api.bcolors.BOLD, api.bcolors.ENDC))
         api.debug('OK: {}'.format(test_success))
         api.debug('ERROR: {}'.format(test_errors))
-
-    @staticmethod
-    def __gen_dict_values(obj):
-        """
-        Generate random values for dictionary recursively
-
-        :param obj: dictionary
-            obj['gen']: eval('int')
-            obj['min']: int
-            obj['max']: int
-        :return: dictionary obj formatted
-            obj: random value
-        """
-        for key in obj:
-            if type(obj[key]) == dict:
-                if 'gen' in obj[key]:
-                    obj[key] = RANDOM_FUNCTIONS[obj[key]['gen']](obj[key]['min'], obj[key]['max'])
-                else:
-                    obj[key] = CLI.__gen_dict_values(obj[key])
-
-        return obj
-
-    @staticmethod
-    def __exec_dict_values(obj, var):
-        """
-        Generate executed values for dictionary recursively
-
-        :param obj: dictionary
-            obj: expression string
-        :return: dictionary obj formatted
-            obj: value
-        """
-
-        if type(obj) == str:
-            return eval(obj)
-        elif type(obj) != dict:
-            return obj
-
-        for key in obj:
-            if type(obj[key]) == str:
-                obj[key] = eval(obj[key])
-            elif type(obj[key]) == dict:
-                obj[key] = CLI.__exec_dict_values(obj[key], var)
-
-        return obj

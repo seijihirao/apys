@@ -84,7 +84,15 @@ def main():
                     with open(os.devnull, "w") as f, contextlib.redirect_stdout(f):  # disable logs
                         server.start(config, multiprocess)
 
-                server_process = Process(target=start, args=(args.config, process))
+                # getting config file
+                if args.config:
+                    server_config = args.config
+                elif hasattr(cli, 'config'):
+                    server_config = cli.config
+                else:
+                    server_config = None
+
+                server_process = Process(target=start, args=(server_config, process))
                 server_process.start()
                 process['event'].wait()
 
