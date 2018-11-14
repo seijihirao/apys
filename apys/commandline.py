@@ -1,15 +1,15 @@
+import argparse
+import sys
 import os
 import importlib
 import importlib.util
-import argparse
-import asyncio
-import contextlib
-from multiprocessing import Process, Event, Manager
 
 from apys import settings
 
 
 def main():
+    # Adding current dir to sys path
+    sys.path.insert(0, './')
 
     parser = argparse.ArgumentParser(description='apys - a restful api framework.')
     parser.add_argument('-s', '--start', '--serve', 
@@ -31,7 +31,7 @@ def main():
     ##
     # Adding CLI utils
     #
-    utils = {}
+    utils = []
     if os.path.exists(os.path.join('.', settings.DIR_UTILS)):
         for subdir in os.listdir(os.path.join('.', settings.DIR_UTILS)):
             if(
@@ -43,14 +43,17 @@ def main():
                 spec = importlib.util.spec_from_file_location(
                     util,
                     os.path.join('.', settings.DIR_UTILS, util, '__cli__.py'))
-                utils[util] = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(utils[util])
+                module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(module)
 
                 # Get util CLI object
-                cli = utils[util].CLI(None)
+                cli = module.CLI(None)
                 parser.add_argument('-{}'.format(util[0]), '--{}'.format(util),
                                     action=cli.action, default=cli.default,
                                     help=cli.help)
+
+                # Adding util to list
+                utils += [util]
 
     ##
     # Get arguments and execute scripts
@@ -71,36 +74,13 @@ def main():
         # start util script
         for util in utils:
             if getattr(args, util, False):
-                cli = utils[util].CLI(getattr(args, util, False))
 
-                process = {
-                    'dict': Manager().dict(),
-                    'event': Event()
-                }
+                # Cli argument
+                arg = getattr(args, util, False)
 
-                def start(config, multiprocess):
-                    from apys import server
-
-                    with open(os.devnull, "w") as f, contextlib.redirect_stdout(f):  # disable logs
-                        server.start(config, multiprocess)
-
-                # getting config file
-                if args.config:
-                    server_config = args.config
-                elif hasattr(cli, 'config'):
-                    server_config = cli.config
-                else:
-                    server_config = None
-
-                server_process = Process(target=start, args=(server_config, process))
-                server_process.start()
-                process['event'].wait()
-
-                # execute async function
-                loop = asyncio.new_event_loop()
-                loop.run_until_complete(cli.start(process['dict']['api'], process['dict']['endpoints']))
-
-                server_process.terminate()
+                # Starting server
+                from apys import server
+                server.cli_start(util, args.config, arg)
 
                 return
 

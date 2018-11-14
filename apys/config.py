@@ -4,7 +4,7 @@ import json
 from apys import settings
 
 
-def load(scope='default'):
+def load(scope=None):
     """
     loads chosen config file
     if scope is not define loads default (first try `local`, then `dev` and last `prod`)
@@ -15,36 +15,34 @@ def load(scope='default'):
     Returns:
         obj: formatted json config object
     """
-    if scope is 'default':
-        config = load(default())
-        if config:
-            return config
-                    
-    else:
-        path = os.path.join(settings.DIR_CONFIG, '{}.json'.format(scope))
-        if os.path.exists(path):
-            with open(path, 'r') as config:
-                obj = json.loads(config.read())
-                obj['scope'] = scope
+    if not scope:
+        scope = default()
 
-                # Default Values
+    path = os.path.join(settings.DIR_CONFIG, '{}.json'.format(scope))
 
-                __fill_default_value(obj, 'log', {})
-                __fill_default_value(obj['log'], 'file', settings.DEFAULT_LOG)
-                if type(obj['log']['file']) == str:
-                    obj['log']['file'] = {
-                        'debug': obj['log']['file'],
-                        'error': obj['log']['file']
-                    }
-                __fill_default_value(obj['log'], 'color', settings.DEFAULT_COLOR)
+    if not os.path.exists(path):
+        raise EnvironmentError('No config file found for {}'.format(scope))
 
-                __fill_default_value(obj, 'server', {})
-                __fill_default_value(obj['server'], 'port', settings.DEFAULT_PORT)
-                __fill_default_value(obj['server'], 'cors', settings.DEFAULT_CORS)
+    with open(path, 'r') as config:
+        obj = json.loads(config.read())
+        obj['scope'] = scope
 
-                return obj
+        # Default Values
 
-    raise EnvironmentError('No config file found for {}'.format(scope))
+        __fill_default_value(obj, 'log', {})
+        __fill_default_value(obj['log'], 'file', settings.DEFAULT_LOG)
+        if type(obj['log']['file']) == str:
+            obj['log']['file'] = {
+                'debug': obj['log']['file'],
+                'error': obj['log']['file']
+            }
+        __fill_default_value(obj['log'], 'color', settings.DEFAULT_COLOR)
+
+        __fill_default_value(obj, 'server', {})
+        __fill_default_value(obj['server'], 'port', settings.DEFAULT_PORT)
+        __fill_default_value(obj['server'], 'cors', settings.DEFAULT_CORS)
+
+        return obj
 
 
 def default():
