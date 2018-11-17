@@ -119,7 +119,14 @@ def prepare(app, api, cors_url=''):
                 req.vars = {}
                 try:
                     if req.has_body:
-                        req.body = await req.json()
+                        if req.content_type == 'application/json':
+                            req.body = await req.json()
+                        elif req.content_type == 'multipart/form-data' or \
+                                req.content_type == 'application/x-www-form-urlencoded':
+                            req.body = await req.post()
+                        else:
+                            req.body = {}
+
                         req.body = __translate_json(req.body)
                     else:
                         req.body = {}
