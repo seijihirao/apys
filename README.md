@@ -71,13 +71,16 @@ The current config special properties are the following:
         "color": "bool //default=true"
     },
     "server": {
-        "port": "int //default=8888",
+        "port": "int //default=8080",
         "cors": "string or false //default=false"
     },
     "utils": ["string //default=[]. list of utils in order to load"],
     "(...)": "(...) //you can add any other key and access it via `api.config['my_key']`"
 }
 ```
+You can also use environment variables
+like `$PORT` (for `PORT` env var), and set a default value if no env var is found
+like `$PORT|8080` or `$PORT|8080|int` (if type is needed)
 
 ### ENDPOINTS
 This will be your main dev dir

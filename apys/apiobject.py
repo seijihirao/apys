@@ -92,4 +92,3 @@ class ApiObject:
 
     def __reduce__(self):
         return ApiObject, (self.config_file, )
-

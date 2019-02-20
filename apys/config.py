@@ -24,7 +24,7 @@ def load(scope=None):
         raise EnvironmentError('No config file found for {}'.format(scope))
 
     with open(path, 'r') as config:
-        obj = json.loads(config.read())
+        obj = __get_env(json.loads(config.read()))
         obj['scope'] = scope
 
         # Default Values
@@ -69,3 +69,54 @@ def __fill_default_value(obj, key, default_value):
     """
     if key not in obj:
         obj[key] = default_value
+
+
+def __get_env(obj):
+    """
+    gets value from environment variable if `$` is preceded on value
+
+    i.e.:
+
+    ```
+    {
+        "key": "$API_KEY"
+        "db_url": "$DB|localhost"
+        "port": "$PORT|8080|int"
+    }
+    ```
+
+     * `key` will now have the value of the `API_KEY` environment variable, or '$API_KEY' if env var does not exists
+     * `db_url` will now have the value of the `DB` environment variable, or 'localhost' if env var does not exists
+     * `port` will now have the value of the `PORT` environment variable, or 8080 if env var does not exists
+
+
+    :param obj: object to format
+    :return: formatted object
+    """
+    for key in obj:
+        if type(obj[key]) == dict:
+            obj[key] = __get_env(obj[key])
+        elif type(obj[key]) == str and obj[key][0] == '$':
+            env_var = obj[key][1:]
+
+            # Case no default value
+            if env_var.count('|') == 0:
+                if env_var in os.environ:
+                    obj[key] = os.environ[env_var]
+
+            # Case default value
+            if env_var.count('|') == 1:
+                env_var, default_val = env_var.split('|')
+                if env_var in os.environ:
+                    obj[key] = os.environ[env_var]
+                else:
+                    obj[key] = default_val
+
+            # Case default value with type
+            if env_var.count('|') == 2:
+                env_var, default_val, default_type = env_var.split('|')
+                if env_var in os.environ:
+                    obj[key] = os.environ[env_var]
+                else:
+                    obj[key] = eval(default_type)(default_val)
+    return obj

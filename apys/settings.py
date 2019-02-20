@@ -10,7 +10,7 @@ DEFAULT_PROD_NAME = 'prod'
 
 DEFAULT_LOG = False
 DEFAULT_COLOR = True
-DEFAULT_PORT = 8888
+DEFAULT_PORT = '$PORT|8080|int'
 DEFAULT_CORS = False
 
 ##
@@ -22,7 +22,7 @@ DIR_ENDPOINTS = 'endpoints'
 DIR_FILTERS = 'filters'
 DIR_UTILS = 'utils'
 
-DEFAULT_PROD_PORT = 80
+DEFAULT_PROD_PORT = '$PORT|80|int'
 DEFAULT_PROD_CORS = False
 DEFAULT_PROD_LOG_DIR = os.path.join('/', 'var', 'logs', 'apys')
 DEFAULT_PROD_LOG_DEBUG_FILE = 'debug.log'
