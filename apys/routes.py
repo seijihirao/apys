@@ -208,13 +208,13 @@ def __translate_json(obj):
     Gets a dictionary and formats its keys,
     following the rules:
 
-        {'var[0]': 'value0', 'var[1]': 'value1'}
+        {'var.0': 'value0', 'var.1': 'value1'}
         will be
         {'var': ['value0', 'value1']}
 
     And 
     
-        {'var[key0]': 'value0', 'var[key1]': 'value1'}
+        {'var.key0': 'value0', 'var.key1': 'value1'}
         will be
         {'var': {'key0':'value0', 'key1':'value1'}}
 
@@ -230,15 +230,21 @@ def __translate_json(obj):
 
     translated_obj = {}
     for key in obj:
-        if re.match(r'^(\w+)\[(\w+)\]$', key):
-            main, sub = re.match(r'(\w+)\[(\w+)\]', key).groups()
-            if main not in translated_obj:
-                translated_obj[main] = {}
-            translated_obj[main][sub] = __translate_json(obj[key])
-            
-        else:
-            translated_obj[key] = __translate_json(obj[key])
-    
+        dot_count = key.count('.')
+        if dot_count:
+            keys = key.split('.')
+            cur_translated_obj = translated_obj
+            for cur_key in keys:
+                if dot_count:
+                    # Keeps iterating and adding nested objects
+                    if cur_key not in cur_translated_obj:
+                        cur_translated_obj[cur_key] = {}
+                    cur_translated_obj = cur_translated_obj[cur_key]
+                else:
+                    # Last one should have value
+                    cur_translated_obj[cur_key] = obj[key]
+                dot_count -= 1
+
     for key in translated_obj:
         translated_obj[key] = __dict_to_list(translated_obj[key])
 
@@ -247,7 +253,7 @@ def __translate_json(obj):
 
 def __dict_to_list(obj):
     """
-    Converts a dictionary to a list
+    Converts a dictionary to a list recursively
 
         {'0':'value0', '1':'value1'}
         will be
@@ -255,17 +261,22 @@ def __dict_to_list(obj):
 
     Args:
         obj - dictionary object to be converted
-    
+
     Returns:
-        list if conversion was possible 
+        list if conversion was possible
     """
+    # Recursively converts
+    for key in obj:
+        if type(obj[key]) == dict:
+            obj[key] = __dict_to_list(obj[key])
+
     # Only converts a dictionary
     if type(obj) != dict:
         return obj
-    
+
     # Checks if it really can be converted to a list
     for key in obj:
         if not key.isdigit():
             return obj
-    
+
     return list(OrderedDict(obj).values())  # needs an ordered dict to return list in order
