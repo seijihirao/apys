@@ -244,11 +244,10 @@ def __translate_json(obj):
                     # Last one should have value
                     cur_translated_obj[cur_key] = obj[key]
                 dot_count -= 1
+        else:
+            translated_obj[key] = obj[key]
 
-    for key in translated_obj:
-        translated_obj[key] = __dict_to_list(translated_obj[key])
-
-    return translated_obj
+    return __dict_to_list(translated_obj)
 
 
 def __dict_to_list(obj):
@@ -265,14 +264,15 @@ def __dict_to_list(obj):
     Returns:
         list if conversion was possible
     """
+
+    # Only converts a dictionary
+    if type(obj) != dict or obj == {}:
+        return obj
+
     # Recursively converts
     for key in obj:
         if type(obj[key]) == dict:
             obj[key] = __dict_to_list(obj[key])
-
-    # Only converts a dictionary
-    if type(obj) != dict:
-        return obj
 
     # Checks if it really can be converted to a list
     for key in obj:
