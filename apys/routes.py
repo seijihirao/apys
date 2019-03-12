@@ -123,7 +123,7 @@ def prepare(app, api, cors_url=''):
                             req.body = await req.json()
                         elif req.content_type == 'multipart/form-data' or \
                                 req.content_type == 'application/x-www-form-urlencoded':
-                            req.body = await req.post()
+                            req.body = dict(await req.post())
                         else:
                             req.body = {}
 
