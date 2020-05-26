@@ -7,9 +7,11 @@ https://github.com/pypa/sampleproject
 # Always prefer setuptools over distutils
 from setuptools import setup, find_packages
 
-# Getting description from readme
-import pypandoc
-description = pypandoc.convert_file('README.md', 'rst')
+# read the contents of your README file
+from os import path
+this_directory = path.abspath(path.dirname(__file__))
+with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
 
 try:
     import apys
@@ -26,7 +28,8 @@ setup(
     version=version,
 
     description='A simple back-end rest framework in python using aiohttp lib',
-    long_description=description,
+    long_description=long_description,
+    long_description_content_type='text/markdown',
 
     # The project's main homepage.
     url='https://github.com/seijihirao/apys',

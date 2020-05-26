@@ -48,24 +48,25 @@ class ApiObject:
         # ADDING UTILS TO API PARAM
         #
         utils = {}
-        for util in self.config['utils']:
-            if (
-                    (os.path.isdir(os.path.join('.', settings.DIR_UTILS, util))) and
-                    (os.path.exists(os.path.join('.', settings.DIR_UTILS, util, '__init__.py')))
-            ):
-                if util not in utils:
-                    spec = importlib.util.spec_from_file_location(
-                        util,
-                        os.path.join('.', settings.DIR_UTILS, util, '__init__.py'))
+        if 'utils' in self.config:
+            for util in self.config['utils']:
+                if (
+                        (os.path.isdir(os.path.join('.', settings.DIR_UTILS, util))) and
+                        (os.path.exists(os.path.join('.', settings.DIR_UTILS, util, '__init__.py')))
+                ):
+                    if util not in utils:
+                        spec = importlib.util.spec_from_file_location(
+                            util,
+                            os.path.join('.', settings.DIR_UTILS, util, '__init__.py'))
 
-                    utils[util] = importlib.util.module_from_spec(spec)
-                    spec.loader.exec_module(utils[util])
+                        utils[util] = importlib.util.module_from_spec(spec)
+                        spec.loader.exec_module(utils[util])
 
-                    setattr(self, util, utils[util])
+                        setattr(self, util, utils[util])
 
-                    # calls util init function
-                    if hasattr(utils[util], 'init'):
-                        utils[util].init(self)
+                        # calls util init function
+                        if hasattr(utils[util], 'init'):
+                            utils[util].init(self)
 
         # Starts Logging Resources
         self.debug('')
