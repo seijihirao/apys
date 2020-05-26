@@ -3,7 +3,11 @@
 
 name: Upload Python Package (Test)
 
-on: push
+on: 
+  push:
+    branches:
+      - master
+
 
 jobs:
   deploy:
