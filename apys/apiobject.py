@@ -67,6 +67,7 @@ class ApiObject:
                         # calls util init function
                         if hasattr(utils[util], 'init'):
                             utils[util].init(self)
+        self.utils = utils
 
         if has_log:
             # Starts Logging Resources
@@ -94,3 +95,10 @@ class ApiObject:
 
     def __reduce__(self):
         return ApiObject, (self.config_file, False)
+    
+    async def destroy(self, app):
+        yield
+        for util in self.utils:
+            # calls util destroy function
+            if hasattr(self.utils[util], 'destroy'):
+                await self.utils[util].destroy(self)
