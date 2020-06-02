@@ -10,3 +10,6 @@ def init(api):
     """
     api.hello_world_message = api.config['test'] # get 'test' value from config json
     api.debug('App started')
+
+def destroy(api):
+    api.debug('App finished')

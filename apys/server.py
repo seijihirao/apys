@@ -50,6 +50,8 @@ def start(config_file=None, process={'event': False, 'dict': {}}):
     if process['event']:
         process['event'].set()
 
+    app.cleanup_ctx.append(global_api.destroy)
+
     # Running server
     web.run_app(app, port=global_api.config['server']['port'])
 
