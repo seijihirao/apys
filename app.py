@@ -1,3 +1,3 @@
-from apys import server
+from apys import commandline
 
-server.start('dev')
+commandline.main()

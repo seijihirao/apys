@@ -20,7 +20,7 @@ class ApiObject:
         (will be added endpoint required util modules)
     """
 
-    def __init__(self, config_file):
+    def __init__(self, config_file, has_log=True):
         # Config file
         self.config_file = config_file
         self.config = config.load(config_file) if config_file else config.load()
@@ -68,22 +68,23 @@ class ApiObject:
                         if hasattr(utils[util], 'init'):
                             utils[util].init(self)
 
-        # Starts Logging Resources
-        self.debug('')
-        cors_url = self.config['server']['cors']
-        if cors_url:
-            self.debug('================== Resources ==================== {}cors-enabled=\'{}\'{}'.format(
-                self.bcolors.WARNING, cors_url, self.bcolors.ENDC))
-        else:
-            self.debug('================== Resources ====================')
+        if has_log:
+            # Starts Logging Resources
+            self.debug('')
+            cors_url = self.config['server']['cors']
+            if cors_url:
+                self.debug('================== Resources ==================== {}cors-enabled=\'{}\'{}'.format(
+                    self.bcolors.WARNING, cors_url, self.bcolors.ENDC))
+            else:
+                self.debug('================== Resources ====================')
 
-        self.debug('')
+            self.debug('')
 
-        # Logging loaded utils
-        for util in utils:
-            self.debug('Util Loaded: [{}{}{}]'.format(self.bcolors.OKBLUE, util, self.bcolors.ENDC))
+            # Logging loaded utils
+            for util in utils:
+                self.debug('Util Loaded: [{}{}{}]'.format(self.bcolors.OKBLUE, util, self.bcolors.ENDC))
 
-        self.debug('')
+            self.debug('')
 
     def debug(self, msg, to='debug'):
         log.debug(self, msg, to)
@@ -92,4 +93,4 @@ class ApiObject:
         log.error(self, msg, to, ex)
 
     def __reduce__(self):
-        return ApiObject, (self.config_file, )
+        return ApiObject, (self.config_file, False)

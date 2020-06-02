@@ -1,0 +1,53 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Demo: Hello World",
+            "type": "python",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/demo/hello_world",
+            "program": "../../app.py",
+            "args": ["-s"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Demo: Calculator",
+            "type": "python",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/demo/calculator",
+            "program": "../../app.py",
+            "args": ["-s"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Demo: Log To file",
+            "type": "python",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/demo/log_to_file",
+            "program": "../../app.py",
+            "args": ["-s"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Demo: Unit Testing",
+            "type": "python",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/demo/unit_testing",
+            "program": "../../app.py",
+            "args": ["-t"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Demo: User Roles",
+            "type": "python",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/demo/user_roles",
+            "program": "../../app.py",
+            "args": ["-s"],
+            "console": "integratedTerminal"
+        }
+    ]
+}
