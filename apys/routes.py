@@ -44,7 +44,7 @@ def prepare(app, api, cors_url=''):
     file_paths = []
     
     # read all endpoint files
-    for root, subdirs, files in os.walk(os.path.join('.', settings.DIR_ENDPOINTS)):
+    for root, _, files in os.walk(os.path.join('.', settings.DIR_ENDPOINTS)):
         for file in files:
             if os.path.splitext(file)[1] == '.py':
                 file_paths += [{
@@ -87,10 +87,10 @@ def prepare(app, api, cors_url=''):
                 if hasattr(filters[cur_filter], 'init'):
                     filters[cur_filter].init(api)
 
-                loaded_filters[cur_filter] = filters[cur_filter]
+            loaded_filters[cur_filter] = filters[cur_filter]
 
         if hasattr(file_module, ATTR_FILTERS):
-            for filt in file_module.filters:
+            for filt in getattr(file_module, ATTR_FILTERS):
 
                 if type(filt) == str:
                     add_filters(filt)
@@ -136,7 +136,7 @@ def prepare(app, api, cors_url=''):
                     raise handler_props['api'].web.HTTPInternalServerError(reason=str_err)
                 
                 if hasattr(endpoint, ATTR_FILTERS):
-                    for cur_filter in endpoint.filters:
+                    for cur_filter in getattr(endpoint, ATTR_FILTERS):
                         if type(cur_filter) == str:
                             exec_filter(req, cur_filter)
                         elif type(cur_filter) == list:
@@ -186,15 +186,25 @@ def prepare(app, api, cors_url=''):
         for method in loaded_methods:
             str_loaded_methods = '{}{}{}'.format(api.bcolors.OKGREEN, method, api.bcolors.ENDC)
 
-            str_loaded_filters = ''
-            for filt in loaded_filters:
-                if hasattr(loaded_filters[filt], 'always'):
-                    str_loaded_filters += '{}{}{}'.format(api.bcolors.OKBLUE, filt, api.bcolors.ENDC)
-                    str_loaded_filters += ', '
-                if hasattr(loaded_filters[filt], method):
-                    str_loaded_filters += '{}{}{}'.format(api.bcolors.OKGREEN, filt, api.bcolors.ENDC)
-                    str_loaded_filters += ', '
-            str_loaded_filters = str_loaded_filters[0:-2]
+            list_loaded_filters = []
+            if hasattr(file_module, ATTR_FILTERS):
+                for filt in getattr(file_module, ATTR_FILTERS):
+                    if type(filt) == str:
+                        if filt in loaded_filters:
+                            if hasattr(loaded_filters[filt], 'always'):
+                                list_loaded_filters.append('{}{}{}'.format(api.bcolors.OKBLUE, filt, api.bcolors.ENDC))
+                            if hasattr(loaded_filters[filt], method):
+                                list_loaded_filters.append('{}{}{}'.format(api.bcolors.OKGREEN, filt, api.bcolors.ENDC))
+                    elif type(filt) == list:
+                        list_loaded_filter_group = []
+                        for f in filt:
+                            if f in loaded_filters:
+                                if hasattr(loaded_filters[f], 'always'):
+                                    list_loaded_filter_group.append('{}{}{}'.format(api.bcolors.OKBLUE, f, api.bcolors.ENDC))
+                                if hasattr(loaded_filters[f], method):
+                                    list_loaded_filter_group.append('{}{}{}'.format(api.bcolors.OKGREEN, f, api.bcolors.ENDC))
+                        list_loaded_filters.append('[{}]'.format(', '.join(list_loaded_filter_group)))
+            str_loaded_filters = ', '.join(list_loaded_filters)
             
             api.debug('Endpoint Loaded: [{}{}{}] ({}) <- {{{}}}'.format(
                 api.bcolors.OKGREEN, file_path['url'], api.bcolors.ENDC, str_loaded_methods, str_loaded_filters))
